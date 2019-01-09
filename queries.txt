@@ -1,0 +1,14 @@
+#1
+db.requests.aggregate([{ "$match": {$and: [ {"CreationDate": {"$gte": ISODate("2011-01-12T00:00:00")}}, {"CreationDate": {"$lte": ISODate("2012-01-12T00:00:00")}} ] }},{$group : {_id : "$Type of Service Request", total : {$sum : 1}}}])
+
+#2
+db.requests.aggregate([ { $match: { $and: [ {"Type of Service Request": "Tree Trim"}, {"CreationDate": {"$gte" : ISODate("2011-01-12T00:00:00")}}, {"CreationDate": {"$lte" : ISODate("2012-01-12T00:00:00")}}]}} ,{$group : {_id : "$CreationDate", total : {$sum : 1}}}]);
+
+#2.1(with order, not required)
+db.requests.aggregate([ { $match: { $and: [ {"Type of Service Request": "Tree Trim"}, {"CreationDate": {"$gte" : ISODate("2011-01-12T00:00:00")}}, {"CreationDate": {"$lte" : ISODate("2012-01-12T00:00:00")}}]}} ,{$group : {_id : "$CreationDate", total : {$sum : 1}}}, {$sort: {"CreationDate": -1}}]);
+
+#4
+db.requests.aggregate([ { $match: { $and: [ {"Type of Service Request": "Sanitation Code Violation"} ]}} ,{$group : {_id : "$Ward", total : {$sum : 1}}}, {$sort: {total : 1}}, {$limit:3}]);
+
+#5
+db.requests.aggregate([{ $match: {"CreationDate": { $exists: 1, $gte: ISODate("2011-01-01"), $lte: ISODate("2012-08-01")}, "CompletionDate": {$exists: 1 }}}, {$group: { _id: null, avg_days: { $avg: { $divide: [{$subtract: ["$CompletionDate", "$CreationDate"] }, 24*60*60*1000]}}}}, { $project: {_id: 0, avg_days: 1 }}])
