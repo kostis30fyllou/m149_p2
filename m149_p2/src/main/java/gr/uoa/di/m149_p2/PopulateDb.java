@@ -22,9 +22,9 @@ import java.util.List;
 @SpringBootApplication
 public class PopulateDb implements CommandLineRunner {
 
-    private static final String path = "/home/kostis/Desktop/Csv/";
+    private static final String path = "/home/giannis/Documents/chicago-311-service-requests/";
     private static final String split = ",";
-    private static final SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Autowired
     private RequestRepository requestRepository;
@@ -34,7 +34,7 @@ public class PopulateDb implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws  Exception{
+    public void run(String... args) throws Exception {
 
         requestRepository.deleteAll();
         String csv = path + "311-service-requests-street-lights-one-out.csv";
@@ -47,15 +47,17 @@ public class PopulateDb implements CommandLineRunner {
                 String[] fields = line.split(split);
                 Date creationDate = sdf.parse(fields[0]);
                 Date completionDate = sdf.parse(fields[2]);
+                Integer zip = null;
+                if (!fields[6].equalsIgnoreCase("")) { zip = Integer.parseInt(fields[6]);}
                 BigDecimal lat = new BigDecimal(fields[12]);
                 BigDecimal longit = new BigDecimal(fields[13]);
                 List<Double> values = new ArrayList<>();
                 values.add(lat.doubleValue());
                 values.add(longit.doubleValue());
                 Point point = new Point(new Position(values));
-                Request request = new Request(creationDate, fields[1], completionDate, fields[3], "Street Light Out", fields[5], Integer.parseInt(fields[6]),
-                        new BigDecimal(fields[7]), new BigDecimal(fields[8]),  Integer.parseInt(fields[9]),  Integer.parseInt(fields[10]),  Integer.parseInt(fields[11]),
-                        lat, longit, fields[14] + "," + fields[15], point);
+                Request request = new Request(creationDate, fields[1], completionDate, fields[3], "Street Light Out",
+                        fields[5], zip, new BigDecimal(fields[7]), new BigDecimal(fields[8]), Integer.parseInt(fields[9]),
+                        Integer.parseInt(fields[10]), Integer.parseInt(fields[11]), lat, longit, fields[14] + "," + fields[15], point);
                 requestRepository.save(request);
 
             }
