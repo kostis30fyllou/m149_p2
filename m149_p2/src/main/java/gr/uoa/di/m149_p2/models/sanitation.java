@@ -9,7 +9,7 @@ public class sanitation extends Request {
     @Id
     private String codeViolation;
 
-    
+
 
     public String getCodeViolation() {
         return codeViolation;
