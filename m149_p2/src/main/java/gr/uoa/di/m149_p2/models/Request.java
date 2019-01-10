@@ -30,6 +30,10 @@ public class Request {
     private String location;
     private Point point;
 
+    public Request() {
+
+    }
+
     public Request(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest, String streetAddress,
                    Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict, Integer communityArea, BigDecimal latitude, BigDecimal longitude,
                    String location, Point point) {
