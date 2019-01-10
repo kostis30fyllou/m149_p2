@@ -22,7 +22,7 @@ import java.util.List;
 @SpringBootApplication
 public class PopulateDb implements CommandLineRunner {
 
-    private static final String path = "/home/giannis/Documents/chicago-311-service-requests/";
+    private static final String path = "/home/john/Documents/databases/chicago-311-service-requests/";
     private static final String split = ",";
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -45,19 +45,45 @@ public class PopulateDb implements CommandLineRunner {
 
                 // use comma as separator
                 String[] fields = line.split(split);
+//                System.out.print(fields.length);
+//                for (int i=0; i<fields.length; i++)
+//                {
+//                    System.out.println(fields[i]);
+//                }
                 Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = sdf.parse(fields[2]);
+                Date completionDate = null;
+                if (!fields[2].equalsIgnoreCase("")) { completionDate = sdf.parse(fields[2]);}
+                String streetAddress = null;
+                if (fields.length > 5) {
+                    streetAddress = fields[5];
+                }
                 Integer zip = null;
-                if (!fields[6].equalsIgnoreCase("")) { zip = Integer.parseInt(fields[6]);}
-                BigDecimal lat = new BigDecimal(fields[12]);
-                BigDecimal longit = new BigDecimal(fields[13]);
-                List<Double> values = new ArrayList<>();
-                values.add(lat.doubleValue());
-                values.add(longit.doubleValue());
-                Point point = new Point(new Position(values));
+                if (fields.length > 6 && !fields[6].equalsIgnoreCase("")) { zip = Integer.parseInt(fields[6]);}
+                BigDecimal x = null;
+                BigDecimal y = null;
+                Integer ward = null;
+                Integer policeDistrict = null;
+                Integer communityArea = null;
+                BigDecimal lat = null;
+                BigDecimal longit = null;
+                Point point = null;
+                String location = null;
+                if (fields.length > 7 && !fields[7].equalsIgnoreCase("") && !fields[8].equalsIgnoreCase("")) {
+                    x = new BigDecimal(fields[7]);
+                    y = new BigDecimal(fields[8]);
+                    if (!fields[9].equalsIgnoreCase("")) { ward = Integer.parseInt(fields[9]); }
+                    if (!fields[10].equalsIgnoreCase("")) { policeDistrict = Integer.parseInt(fields[10]); }
+                    if (!fields[11].equalsIgnoreCase("")) { communityArea = Integer.parseInt(fields[11]); }
+                    lat = new BigDecimal(fields[12]);
+                    longit = new BigDecimal(fields[13]);
+                    List<Double> values = new ArrayList<>();
+                    values.add(lat.doubleValue());
+                    values.add(longit.doubleValue());
+                    point = new Point(new Position(values));
+                    location = fields[14] + "," + fields[15];
+                }
                 Request request = new Request(creationDate, fields[1], completionDate, fields[3], "Street Light Out",
-                        fields[5], zip, new BigDecimal(fields[7]), new BigDecimal(fields[8]), Integer.parseInt(fields[9]),
-                        Integer.parseInt(fields[10]), Integer.parseInt(fields[11]), lat, longit, fields[14] + "," + fields[15], point);
+                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
                 requestRepository.save(request);
 
             }
