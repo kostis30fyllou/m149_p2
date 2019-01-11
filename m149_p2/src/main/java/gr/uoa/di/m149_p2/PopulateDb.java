@@ -3,9 +3,7 @@ package gr.uoa.di.m149_p2;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
-import gr.uoa.di.m149_p2.models.Request;
-import gr.uoa.di.m149_p2.models.RodentBaiting;
-import gr.uoa.di.m149_p2.models.Sanitation;
+import gr.uoa.di.m149_p2.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -20,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 @SpringBootApplication
@@ -42,13 +41,18 @@ public class PopulateDb implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        //requestRepository.deleteAll();
-        //insertStreetLightsOut();
-        insertSanitation();
-        insertRodentBaiting();
+        requestRepository.deleteAll();
+        //insertStreetLightOut();
+        //insertSanitation();
+        //insertRodentBaiting();
+//        insertGraffiti();
+//        insertPotholes();
+//        insertAlleyLightsOut();
+//        insertStreetLightsAllOut();
+        insertTreeTrims();
     }
 
-    public void insertStreetLightsOut() throws Exception {
+    public void insertStreetLightOut() throws Exception {
         System.out.println("Insert Street Light Out Requests");
         String csv = path + "311-service-requests-street-lights-one-out.csv";
         String line;
@@ -247,4 +251,378 @@ public class PopulateDb implements CommandLineRunner {
         }
         System.out.println("Finished Insert Rodent Baiting");
     }
+
+    public void insertGraffiti() throws Exception {
+        System.out.println("Insert Graffiti");
+        String csv = path + "311-service-requests-graffiti-removal.csv";
+        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
+            String line = br.readLine();
+            while ((line = br.readLine()) != null) {
+
+                // use comma as separator
+                String[] fields = line.split("\\,", -1);
+//                System.out.println(fields.length);
+//                for (int i=0; i<fields.length; i++)
+//                {
+//                    System.out.println(fields[i]);
+//                }
+                Date creationDate = sdf.parse(fields[0]);
+                Date completionDate = null;
+                if (!fields[2].equalsIgnoreCase("")) {
+                    completionDate = sdf.parse(fields[2]);
+                }
+                String surface = fields[5];
+                String graffitiLocated = fields[6];
+
+                String streetAddress = null;
+                if (fields.length > 7) {
+                    streetAddress = fields[7];
+                }
+                Integer zip = null;
+                if (fields.length > 8 && !fields[8].equalsIgnoreCase("")) {
+                    zip = Integer.parseInt(fields[8]);
+                }
+                BigDecimal x = null;
+                BigDecimal y = null;
+                Integer ward = null;
+                Integer policeDistrict = null;
+                Integer communityArea = null;
+
+                String ssa = null;
+
+                BigDecimal lat = null;
+                BigDecimal longit = null;
+                Point point = null;
+                String location = null;
+                if (fields.length > 9 && !fields[9].equalsIgnoreCase("") && !fields[10].equalsIgnoreCase("")) {
+                    x = new BigDecimal(fields[9]);
+                    y = new BigDecimal(fields[10]);
+                    if (!fields[11].equalsIgnoreCase("")) {
+                        ward = Integer.parseInt(fields[11]);
+                    }
+                    if (!fields[12].equalsIgnoreCase("")) {
+                        policeDistrict = Integer.parseInt(fields[12]);
+                    }
+                    if (!fields[13].equalsIgnoreCase("")) {
+                        communityArea = Integer.parseInt(fields[13]);
+                    }
+
+                    ssa = fields[14];
+
+                    if (!fields[15].equalsIgnoreCase(""))
+                        lat = new BigDecimal(fields[15]);
+                    if (!fields[16].equalsIgnoreCase(""))
+                        longit = new BigDecimal(fields[16]);
+                    if (!fields[15].equalsIgnoreCase("") && !fields[16].equalsIgnoreCase("")) {                        List<Double> values = new ArrayList<>();
+                        values.add(lat.doubleValue());
+                        values.add(longit.doubleValue());
+                        point = new Point(new Position(values));
+                    }
+                    if (fields.length > 18) {
+                        location = fields[17] + "," + fields[18] + "," + fields[19];
+                    }
+                }
+                Graffiti request = new Graffiti(creationDate, fields[1], completionDate, fields[3], fields[4], streetAddress,
+                        zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
+                        surface, graffitiLocated, ssa);
+                requestRepository.save(request);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Finished Insert Graffiti");
+    }
+
+    public void insertPotholes() throws Exception {
+        String csv = path + "311-service-requests-pot-holes-reported.csv";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
+            String line = br.readLine();
+            while ((line = br.readLine()) != null) {
+
+                // use comma as separator
+                String[] fields = line.split("\\,", -1);
+//                System.out.println(fields.length);
+//                for (int i=0; i<fields.length; i++)
+//                {
+//                    System.out.println(fields[i]);
+//                }
+                Date creationDate = sdf.parse(fields[0]);
+                Date completionDate = null;
+                if (!fields[2].equalsIgnoreCase(""))
+                    completionDate = sdf.parse(fields[2]);
+
+                String currentActivity = fields[5];
+                String mostRecentAction = fields[6];
+                Float potHoles = null;
+                if (!fields[7].equalsIgnoreCase(""))
+                    potHoles = Float.parseFloat(fields[7]);
+
+                String streetAddress = fields[8];
+                Integer zip = null;
+                if (!fields[9].equalsIgnoreCase("")) {
+                    zip = Integer.parseInt(fields[9]);
+                }
+                BigDecimal x = null;
+                BigDecimal y = null;
+                Integer ward = null;
+                Integer policeDistrict = null;
+                Integer communityArea = null;
+
+                String ssa = null;
+
+                BigDecimal lat = null;
+                BigDecimal longit = null;
+                Point point = null;
+                String location = null;
+                if (!fields[10].equalsIgnoreCase(""))
+                    x = new BigDecimal(fields[10]);
+                if (!fields[11].equalsIgnoreCase(""))
+                    y = new BigDecimal(fields[11]);
+                if (!fields[12].equalsIgnoreCase(""))
+                    ward = Integer.parseInt(fields[12]);
+                if (!fields[13].equalsIgnoreCase(""))
+                    policeDistrict = Integer.parseInt(fields[13]);
+                if (!fields[14].equalsIgnoreCase(""))
+                    communityArea = Integer.parseInt(fields[14]);
+
+                ssa = fields[15];
+
+                if (!fields[16].equalsIgnoreCase(""))
+                    lat = new BigDecimal(fields[16]);
+                if (!fields[17].equalsIgnoreCase(""))
+                    longit = new BigDecimal(fields[17]);
+                if (!fields[15].equalsIgnoreCase("") && !fields[16].equalsIgnoreCase("")) {
+                    List<Double> values = new ArrayList<>();
+                    values.add(lat.doubleValue());
+                    values.add(longit.doubleValue());
+                    point = new Point(new Position(values));
+                }
+                if (fields.length > 19) {
+                    location = fields[18] + "," + fields[19] + "," + fields[20];
+                }
+
+                Potholes request = new Potholes(creationDate, fields[1], completionDate, fields[3], "Pothole in Street",
+                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
+                        currentActivity, mostRecentAction, potHoles, ssa);
+                requestRepository.save(request);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Finished Insert Potholes");
+    }
+
+    public void insertAlleyLightsOut() throws Exception {
+        System.out.println("Insert Alley Light Out Requests");
+        String csv = path + "311-service-requests-alley-lights-out.csv";
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
+            line = br.readLine();
+            while ((line = br.readLine()) != null) {
+
+                // use comma as separator
+                String[] fields = line.split(split, -1);
+//                System.out.println(fields.length);
+//                for (int i=0; i<fields.length; i++)
+//                {
+//                    System.out.println(fields[i]);
+//                }
+                Date creationDate = sdf.parse(fields[0]);
+                Date completionDate = null;
+                if (!fields[2].equalsIgnoreCase(""))
+                    completionDate = sdf.parse(fields[2]);
+                String streetAddress = null;
+                    streetAddress = fields[5];
+                Integer zip = null;
+                if (!fields[6].equalsIgnoreCase(""))
+                    zip = Integer.parseInt(fields[6]);
+                BigDecimal x = null;
+                BigDecimal y = null;
+                Integer ward = null;
+                Integer policeDistrict = null;
+                Integer communityArea = null;
+                BigDecimal lat = null;
+                BigDecimal longit = null;
+                Point point = null;
+                String location = null;
+                if (!fields[7].equalsIgnoreCase(""))
+                    x = new BigDecimal(fields[7]);
+                if (!fields[8].equalsIgnoreCase(""))
+                    y = new BigDecimal(fields[8]);
+                if (!fields[9].equalsIgnoreCase(""))
+                    ward = Integer.parseInt(fields[9]);
+                if (!fields[10].equalsIgnoreCase(""))
+                    policeDistrict = Integer.parseInt(fields[10]);
+                if (!fields[11].equalsIgnoreCase(""))
+                    communityArea = Integer.parseInt(fields[11]);
+                if (!fields[12].equalsIgnoreCase(""))
+                    lat = new BigDecimal(fields[12]);
+                if (!fields[13].equalsIgnoreCase(""))
+                    longit = new BigDecimal(fields[13]);
+                if (!fields[12].equalsIgnoreCase("") && !fields[13].equalsIgnoreCase("")) {
+                    List<Double> values = new ArrayList<>();
+                    values.add(lat.doubleValue());
+                    values.add(longit.doubleValue());
+                    point = new Point(new Position(values));
+                }
+                if (fields.length > 15) {
+                    location = fields[14] + "," + fields[15] + "," + fields[16];
+                }
+
+                Request request = new Request(creationDate, fields[1], completionDate, fields[3], fields[4],
+                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
+                requestRepository.save(request);
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Finished Insert Alley Light Out Requests");
+    }
+
+    public void insertStreetLightsAllOut() throws Exception {
+        System.out.println("Insert Street Lights All Out Requests");
+        String csv = path + "311-service-requests-street-lights-all-out.csv";
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
+            line = br.readLine();
+            while ((line = br.readLine()) != null) {
+
+                // use comma as separator
+                String[] fields = line.split(split, -1);
+//                System.out.println(fields.length);
+//                for (int i=0; i<fields.length; i++)
+//                {
+//                    System.out.println(fields[i]);
+//                }
+                Date creationDate = sdf.parse(fields[0]);
+                Date completionDate = null;
+                if (!fields[2].equalsIgnoreCase(""))
+                    completionDate = sdf.parse(fields[2]);
+                String streetAddress = null;
+                streetAddress = fields[5];
+                Integer zip = null;
+                if (!fields[6].equalsIgnoreCase(""))
+                    zip = Integer.parseInt(fields[6]);
+                BigDecimal x = null;
+                BigDecimal y = null;
+                Integer ward = null;
+                Integer policeDistrict = null;
+                Integer communityArea = null;
+                BigDecimal lat = null;
+                BigDecimal longit = null;
+                Point point = null;
+                String location = null;
+                if (!fields[7].equalsIgnoreCase(""))
+                    x = new BigDecimal(fields[7]);
+                if (!fields[8].equalsIgnoreCase(""))
+                    y = new BigDecimal(fields[8]);
+                if (!fields[9].equalsIgnoreCase(""))
+                    ward = Integer.parseInt(fields[9]);
+                if (!fields[10].equalsIgnoreCase(""))
+                    policeDistrict = Integer.parseInt(fields[10]);
+                if (!fields[11].equalsIgnoreCase(""))
+                    communityArea = Integer.parseInt(fields[11]);
+                if (!fields[12].equalsIgnoreCase(""))
+                    lat = new BigDecimal(fields[12]);
+                if (!fields[13].equalsIgnoreCase(""))
+                    longit = new BigDecimal(fields[13]);
+                if (!fields[12].equalsIgnoreCase("") && !fields[13].equalsIgnoreCase("")) {
+                    List<Double> values = new ArrayList<>();
+                    values.add(lat.doubleValue());
+                    values.add(longit.doubleValue());
+                    point = new Point(new Position(values));
+                }
+                if (fields.length > 15) {
+                    location = fields[14] + "," + fields[15] + "," + fields[16];
+                }
+
+                Request request = new Request(creationDate, fields[1], completionDate, fields[3], fields[4],
+                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
+                requestRepository.save(request);
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Finished Insert Street Lights All Out Requests");
+    }
+
+    public void insertTreeTrims() throws Exception {
+        System.out.println("Insert Tree Trims Requests");
+        String csv = path + "311-service-requests-tree-trims.csv";
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
+            line = br.readLine();
+            while ((line = br.readLine()) != null) {
+
+                // use comma as separator
+                String[] fields = line.split(split, -1);
+//                System.out.println(fields.length);
+//                for (int i=0; i<fields.length; i++)
+//                {
+//                    System.out.println(fields[i]);
+//                }
+                Date creationDate = sdf.parse(fields[0]);
+                Date completionDate = null;
+                if (!fields[2].equalsIgnoreCase(""))
+                    completionDate = sdf.parse(fields[2]);
+
+                String treeLocation = fields[5];
+
+                String streetAddress = fields[6];
+                Integer zip = null;
+                if (!fields[7].equalsIgnoreCase(""))
+                    zip = Integer.parseInt(fields[7]);
+                BigDecimal x = null;
+                BigDecimal y = null;
+                Integer ward = null;
+                Integer policeDistrict = null;
+                Integer communityArea = null;
+                BigDecimal lat = null;
+                BigDecimal longit = null;
+                Point point = null;
+                String location = null;
+                if (!fields[8].equalsIgnoreCase(""))
+                    x = new BigDecimal(fields[8]);
+                if (!fields[9].equalsIgnoreCase(""))
+                    y = new BigDecimal(fields[9]);
+                if (!fields[10].equalsIgnoreCase(""))
+                    ward = Integer.parseInt(fields[10]);
+                if (!fields[11].equalsIgnoreCase(""))
+                    policeDistrict = Integer.parseInt(fields[11]);
+                if (!fields[12].equalsIgnoreCase(""))
+                    communityArea = Integer.parseInt(fields[12]);
+                if (!fields[13].equalsIgnoreCase(""))
+                    lat = new BigDecimal(fields[13]);
+                if (!fields[14].equalsIgnoreCase(""))
+                    longit = new BigDecimal(fields[14]);
+                if (!fields[13].equalsIgnoreCase("") && !fields[14].equalsIgnoreCase("")) {
+                    List<Double> values = new ArrayList<>();
+                    values.add(lat.doubleValue());
+                    values.add(longit.doubleValue());
+                    point = new Point(new Position(values));
+                }
+                if (fields.length > 16) {
+                    location = fields[15] + "," + fields[16] + "," + fields[17];
+                }
+
+                TreeTrims request = new TreeTrims(creationDate, fields[1], completionDate, fields[3], fields[4],
+                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
+                        treeLocation);
+                requestRepository.save(request);
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Finished Insert Tree Trims Requests");
+    }
+
 }
