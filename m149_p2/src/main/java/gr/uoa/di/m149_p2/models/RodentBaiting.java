@@ -51,4 +51,20 @@ public class RodentBaiting extends Request {
     public void setPremisesWithRats(Float premisesWithRats) {
         this.premisesWithRats = premisesWithRats;
     }
+
+    public String getCurrentActivity() {
+        return currentActivity;
+    }
+
+    public void setCurrentActivity(String currentActivity) {
+        this.currentActivity = currentActivity;
+    }
+
+    public String getMostRecentAction() {
+        return mostRecentAction;
+    }
+
+    public void setMostRecentAction(String mostRecentAction) {
+        this.mostRecentAction = mostRecentAction;
+    }
 }
