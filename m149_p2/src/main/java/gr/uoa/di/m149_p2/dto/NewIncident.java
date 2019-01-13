@@ -18,6 +18,7 @@ public class NewIncident {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String location;
+    private Integer upVotes;
     private String plate;
     private String model;
     private String color;
@@ -38,6 +39,14 @@ public class NewIncident {
 
     public NewIncident() {
 
+    }
+
+    public Integer getUpVotes() {
+        return upVotes;
+    }
+
+    public void setUpVotes(Integer upVotes) {
+        this.upVotes = upVotes;
     }
 
     public String getSurface() {

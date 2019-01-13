@@ -13,12 +13,8 @@ public class Potholes extends Request{
     private Float potholes;
     private String ssa;
 
-    public Potholes(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
-                    String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict,
-                    Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, Point point,
-                    String currentActivity, String mostRecentAction, Float potholes, String ssa) {
-        super(creationDate, status, completionDate, serviceRequestNumber, typeOfServiceRequest, streetAddress, zipCode, x, y,
-                ward, policeDistrict, communityArea, latitude, longitude, location, point);
+    public Potholes(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest, String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict, Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, Point point, Integer upVotes, String currentActivity, String mostRecentAction, Float potholes, String ssa) {
+        super(creationDate, status, completionDate, serviceRequestNumber, typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude, longitude, location, point, upVotes);
         this.currentActivity = currentActivity;
         this.mostRecentAction = mostRecentAction;
         this.potholes = potholes;

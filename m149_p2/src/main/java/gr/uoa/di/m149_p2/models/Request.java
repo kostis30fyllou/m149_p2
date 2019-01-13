@@ -29,11 +29,12 @@ public class Request {
     private BigDecimal longitude;
     private String location;
     private Point point;
+    private Integer upVotes;
 
 
-    public Request(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest, String streetAddress,
-                   Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict, Integer communityArea, BigDecimal latitude, BigDecimal longitude,
-                   String location, Point point) {
+    public Request(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
+                   String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict,
+                   Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, Point point, Integer upVotes) {
         this.creationDate = creationDate;
         this.status = status;
         this.completionDate = completionDate;
@@ -50,6 +51,7 @@ public class Request {
         this.longitude = longitude;
         this.location = location;
         this.point = point;
+        this.upVotes = upVotes;
     }
 
     public String getId() {
@@ -186,5 +188,13 @@ public class Request {
 
     public void setPoint(Point point) {
         this.point = point;
+    }
+
+    public Integer getUpVotes() {
+        return upVotes;
+    }
+
+    public void setUpVotes(Integer upVotes) {
+        this.upVotes = upVotes;
     }
 }

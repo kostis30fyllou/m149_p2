@@ -15,12 +15,8 @@ public class RodentBaiting extends Request {
     private String currentActivity;
     private String mostRecentAction;
 
-    public RodentBaiting(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
-                         String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict,
-                         Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, Point point,
-                         Float premisesBaited, Integer premisesWithGarbage, Float premisesWithRats, String currentActivity, String mostRecentAction) {
-        super(creationDate, status, completionDate, serviceRequestNumber, typeOfServiceRequest, streetAddress, zipCode, x, y,
-                ward, policeDistrict, communityArea, latitude, longitude, location, point);
+    public RodentBaiting(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest, String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict, Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, Point point, Integer upVotes, Float premisesBaited, Integer premisesWithGarbage, Float premisesWithRats, String currentActivity, String mostRecentAction) {
+        super(creationDate, status, completionDate, serviceRequestNumber, typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude, longitude, location, point, upVotes);
         this.premisesBaited = premisesBaited;
         this.premisesWithGarbage = premisesWithGarbage;
         this.premisesWithRats = premisesWithRats;
