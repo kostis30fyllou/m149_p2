@@ -10,17 +10,17 @@ import java.util.Date;
 public class Graffiti extends Request{
     private String surface;
     private String graffitiLocated;
-    private String SSA;
+    private String ssa;
 
     public Graffiti(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
                     String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict,
                     Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, Point point, String surface,
-                    String graffitiLocated, String SSA) {
+                    String graffitiLocated, String ssa) {
         super(creationDate, status, completionDate, serviceRequestNumber, typeOfServiceRequest, streetAddress, zipCode, x, y,
                 ward, policeDistrict, communityArea, latitude, longitude, location, point);
         this.surface = surface;
         this.graffitiLocated = graffitiLocated;
-        this.SSA = SSA;
+        this.ssa = ssa;
     }
 
     public String getSurface() {
@@ -39,11 +39,11 @@ public class Graffiti extends Request{
         this.graffitiLocated = graffitiLocated;
     }
 
-    public String getSSA() {
-        return SSA;
+    public String getSsa() {
+        return ssa;
     }
 
-    public void setSSA(String SSA) {
-        this.SSA = SSA;
+    public void setSsa(String ssa) {
+        this.ssa = ssa;
     }
 }

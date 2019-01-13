@@ -42,17 +42,17 @@ public class PopulateDb implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         requestRepository.deleteAll();
-//        insertStreetLightOut();//done
-//        insertSanitation();// done
-//        insertRodentBaiting();// done
-//        insertGraffiti();// done
-//        insertPotholes();// done
-//        insertAlleyLightsOut();// done
-//        insertStreetLightsAllOut();// done
-//        insertTreeTrims();// done
-//        insertTreeDebris();// done
-//        insertAbandonedVehicles(); //done
-//        insertGarbageCarts(); //done
+        insertStreetLightOut();//done
+        insertSanitation();// done
+        insertRodentBaiting();// done
+        insertGraffiti();// done
+        insertPotholes();// done
+        insertAlleyLightsOut();// done
+        insertStreetLightsAllOut();// done
+        insertTreeTrims();// done
+        insertTreeDebris();// done
+        insertAbandonedVehicles(); //done
+        insertGarbageCarts(); //done
     }
 
     public void insertStreetLightOut() throws Exception {
@@ -103,7 +103,7 @@ public class PopulateDb implements CommandLineRunner {
                     point = new Point(new Position(values));
                 }
                 location = fields[14];
-                Request request = new Request(creationDate, fields[1], completionDate, fields[3], "Street Light Out",
+                StreetLightOut request = new StreetLightOut(creationDate, fields[1], completionDate, fields[3], "Street Light Out",
                         streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
                 requestRepository.save(request);
 
@@ -193,11 +193,11 @@ public class PopulateDb implements CommandLineRunner {
 
                 // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                System.out.print(fields.length);
+                /*System.out.print(fields.length);
                 for (int i=0; i<fields.length; i++)
                 {
                     System.out.println(fields[i]);
-                }
+                }*/
                 Date creationDate = sdf.parse(fields[0]);
                 Date completionDate = null;
                 if (!fields[2].equalsIgnoreCase("")) {
@@ -346,11 +346,11 @@ public class PopulateDb implements CommandLineRunner {
 
                 // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                System.out.println(fields.length);
+                /*System.out.println(fields.length);
                 for (int i=0; i<fields.length; i++)
                 {
                     System.out.println(fields[i]);
-                }
+                }*/
                 Date creationDate = sdf.parse(fields[0]);
                 Date completionDate = null;
                 if (!fields[2].equalsIgnoreCase(""))
@@ -473,7 +473,7 @@ public class PopulateDb implements CommandLineRunner {
                     location = fields[14] + "," + fields[15] + "," + fields[16];
                 }
 
-                Request request = new Request(creationDate, fields[1], completionDate, fields[3], fields[4],
+                AlleyLightsOut request = new AlleyLightsOut(creationDate, fields[1], completionDate, fields[3], fields[4],
                         streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
                 requestRepository.save(request);
 
@@ -542,7 +542,7 @@ public class PopulateDb implements CommandLineRunner {
                     location = fields[14] + "," + fields[15] + "," + fields[16];
                 }
 
-                Request request = new Request(creationDate, fields[1], completionDate, fields[3], fields[4],
+                StreetLightsAllOut request = new StreetLightsAllOut(creationDate, fields[1], completionDate, fields[3], fields[4],
                         streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
                 requestRepository.save(request);
 
@@ -708,11 +708,11 @@ public class PopulateDb implements CommandLineRunner {
 
                 // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                System.out.println(fields.length);
+                /*System.out.println(fields.length);
                 for (int i=0; i<fields.length; i++)
                 {
                     System.out.println(fields[i]);
-                }
+                }*/
                 Date creationDate = sdf.parse(fields[0]);
                 Date completionDate = null;
                 if (!fields[2].equalsIgnoreCase(""))
