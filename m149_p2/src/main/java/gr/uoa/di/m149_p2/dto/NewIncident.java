@@ -3,6 +3,10 @@ package gr.uoa.di.m149_p2.dto;
 import java.math.BigDecimal;
 
 public class NewIncident {
+    private String creationDate;
+    private String status;
+    private String completionDate;
+    private String serviceRequestNumber;
     private String typeOfServiceRequest;
     private String streetAddress;
     private Integer zipCode;
@@ -13,6 +17,7 @@ public class NewIncident {
     private Integer communityArea;
     private BigDecimal latitude;
     private BigDecimal longitude;
+    private String location;
     private String plate;
     private String model;
     private String color;
@@ -21,6 +26,8 @@ public class NewIncident {
     private Double daysParked;
     private String ssa;
     private Double numberOfCarts;
+    private String surface;
+    private String graffitiLocated;
     private Float potholes;
     private Float premisesBaited;
     private Integer premisesWithGarbage;
@@ -28,6 +35,66 @@ public class NewIncident {
     private String codeViolation;
     private String debrisLocations;
     private String treeLocation;
+
+    public NewIncident() {
+
+    }
+
+    public String getSurface() {
+        return surface;
+    }
+
+    public void setSurface(String surface) {
+        this.surface = surface;
+    }
+
+    public String getGraffitiLocated() {
+        return graffitiLocated;
+    }
+
+    public void setGraffitiLocated(String graffitiLocated) {
+        this.graffitiLocated = graffitiLocated;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCompletionDate() {
+        return completionDate;
+    }
+
+    public void setCompletionDate(String completionDate) {
+        this.completionDate = completionDate;
+    }
+
+    public String getServiceRequestNumber() {
+        return serviceRequestNumber;
+    }
+
+    public void setServiceRequestNumber(String serviceRequestNumber) {
+        this.serviceRequestNumber = serviceRequestNumber;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public String getTypeOfServiceRequest() {
         return typeOfServiceRequest;

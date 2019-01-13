@@ -3,7 +3,9 @@ package gr.uoa.di.m149_p2;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
+import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
+import gr.uoa.di.m149_p2.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -30,6 +32,9 @@ public class PopulateDb implements CommandLineRunner {
 
     @Autowired
     private RequestRepository requestRepository;
+
+    @Autowired
+    private RequestService requestService;
 
     @Value("${csv.path}")
     private String path;
@@ -62,51 +67,32 @@ public class PopulateDb implements CommandLineRunner {
        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
            line = br.readLine();
             while ((line = br.readLine()) != null) {
-
-                // use comma as separator
-                String[] fields = line.split(split,-1);
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase(""))
-                    completionDate = sdf.parse(fields[2]);
-                String streetAddress = fields[5];
-                Integer zip = null;
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest("Street Light Out");
+                incident.setStreetAddress(fields[5]);
                 if (!fields[6].equalsIgnoreCase(""))
-                    zip = Integer.parseInt(fields[6]);
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
-                String location = null;
+                    incident.setZipCode(Integer.parseInt(fields[6]));
                 if (!fields[7].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[7]);
+                    incident.setX(new BigDecimal(fields[7]));
                 if (!fields[8].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[8]);
+                    incident.setY(new BigDecimal(fields[8]));
                 if (!fields[9].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[9]);
+                    incident.setWard(Integer.parseInt(fields[9]));
                 if (!fields[10].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[10]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[10]));
                 if (!fields[11].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[11]);
+                    incident.setCommunityArea(Integer.parseInt(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[12]);
+                    incident.setLatitude(new BigDecimal(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[13]);
-                if (!fields[12].equalsIgnoreCase("") && !fields[13].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                location = fields[14];
-                StreetLightOut request = new StreetLightOut(creationDate, fields[1], completionDate, fields[3], "Street Light Out",
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
-                requestRepository.save(request);
-
+                    incident.setLongitude(new BigDecimal(fields[13]));
+                incident.setLocation(fields[14]);
+                requestService.addRequest(incident);
             }
 
         } catch (IOException e) {
@@ -115,7 +101,6 @@ public class PopulateDb implements CommandLineRunner {
         System.out.println("Finished Insert Street Light Out Requests");
 
     }
-
     public void insertSanitation() throws Exception {
         System.out.println("Insert Sanitation Code Complaints");
         String csv = path + "311-service-requests-sanitation-code-complaints.csv";
@@ -123,59 +108,33 @@ public class PopulateDb implements CommandLineRunner {
             String line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
-                String[] fields = line.split(split);
-//                System.out.print(fields.length);
-//                for (int i=0; i<fields.length; i++)
-//                {
-//                    System.out.println(fields[i]);
-//                }
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase("")) {
-                    completionDate = sdf.parse(fields[2]);
-                }
-                String codeViolation = fields[5];
-                String streetAddress = null;
-                if (fields.length > 6) {
-                    streetAddress = fields[6];
-                }
-                Integer zip = null;
-                if (fields.length > 7 && !fields[7].equalsIgnoreCase("")) {
-                    zip = Integer.parseInt(fields[7]);
-                }
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
-                String location = null;
-                if (fields.length > 8 && !fields[8].equalsIgnoreCase("") && !fields[9].equalsIgnoreCase("")) {
-                    x = new BigDecimal(fields[8]);
-                    y = new BigDecimal(fields[9]);
-                    if (!fields[10].equalsIgnoreCase("")) {
-                        ward = Integer.parseInt(fields[10]);
-                    }
-                    if (!fields[11].equalsIgnoreCase("")) {
-                        policeDistrict = Integer.parseInt(fields[11]);
-                    }
-                    if (!fields[12].equalsIgnoreCase("")) {
-                        communityArea = Integer.parseInt(fields[12]);
-                    }
-                    lat = new BigDecimal(fields[13]);
-                    longit = new BigDecimal(fields[14]);
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                    location = fields[15] + "," + fields[16] + "," + fields[17];
-                }
-                Sanitation request = new Sanitation(creationDate, fields[1], completionDate, fields[3], fields[4],
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point, codeViolation);
-                requestRepository.save(request);
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
+                incident.setCodeViolation(fields[5]);
+                incident.setStreetAddress(fields[6]);
+                if (!fields[7].equalsIgnoreCase(""))
+                    incident.setZipCode(Integer.parseInt(fields[7]));
+                if (!fields[8].equalsIgnoreCase(""))
+                    incident.setX(new BigDecimal(fields[8]));
+                if (!fields[9].equalsIgnoreCase(""))
+                    incident.setY(new BigDecimal(fields[9]));
+                if (!fields[10].equalsIgnoreCase(""))
+                    incident.setWard(Integer.parseInt(fields[10]));
+                if (!fields[11].equalsIgnoreCase(""))
+                    incident.setPoliceDistrict(Integer.parseInt(fields[11]));
+                if (!fields[12].equalsIgnoreCase(""))
+                    incident.setCommunityArea(Integer.parseInt(fields[12]));
+                if (!fields[13].equalsIgnoreCase(""))
+                    incident.setLatitude(new BigDecimal(fields[13]));
+                if (!fields[14].equalsIgnoreCase(""))
+                    incident.setLongitude(new BigDecimal(fields[14]));
+                incident.setLocation(fields[15]);
+                requestService.addRequest(incident);
             }
 
         } catch (IOException e) {
@@ -193,67 +152,39 @@ public class PopulateDb implements CommandLineRunner {
 
                 // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                /*System.out.print(fields.length);
-                for (int i=0; i<fields.length; i++)
-                {
-                    System.out.println(fields[i]);
-                }*/
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase("")) {
-                    completionDate = sdf.parse(fields[2]);
-                }
-
-                Float premisesBaited = null;
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
                 if (!fields[5].equalsIgnoreCase(""))
-                    premisesBaited = Float.parseFloat(fields[5]);
-                Integer premisesWithGarbage = null;
+                    incident.setPremisesBaited(Float.parseFloat(fields[5]));
                 if (!fields[6].equalsIgnoreCase(""))
-                    premisesWithGarbage = Integer.parseInt(fields[6]);
-                Float premisesWithRats = null;
+                    incident.setPremisesWithGarbage(Integer.parseInt(fields[6]));
                 if (!fields[7].equalsIgnoreCase(""))
-                    premisesWithRats = Float.parseFloat(fields[7]);
-                String currentActivity = fields[8];
-                String mostRecentAction = fields[9];
-
-                String streetAddress = fields[10];
-                Integer zip = null;
-                if (!fields[11].equalsIgnoreCase("")) {
-                    zip = Integer.parseInt(fields[11]);
-                }
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
+                    incident.setPremisesWithRats(Float.parseFloat(fields[7]));
+                incident.setCurrentActivity(fields[8]);
+                incident.setMostRecentAction(fields[9]);
+                incident.setStreetAddress(fields[10]);
+                if (!fields[11].equalsIgnoreCase(""))
+                    incident.setZipCode(Integer.parseInt(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[12]);
+                    incident.setX(new BigDecimal(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[13]);
+                    incident.setY(new BigDecimal(fields[13]));
                 if (!fields[14].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[14]);
+                    incident.setWard(Integer.parseInt(fields[14]));
                 if (!fields[15].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[15]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[15]));
                 if (!fields[16].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[16]);
+                    incident.setCommunityArea(Integer.parseInt(fields[16]));
                 if (!fields[17].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[17]);
+                    incident.setLatitude(new BigDecimal(fields[17]));
                 if (!fields[18].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[18]);
-                if (!fields[17].equalsIgnoreCase("") && !fields[12].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                String location = fields[19];
-                RodentBaiting request = new RodentBaiting(creationDate, fields[1], completionDate, fields[3], fields[4],
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point, premisesBaited,
-                        premisesWithGarbage, premisesWithRats, currentActivity, mostRecentAction);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[18]));
+                incident.setLocation(fields[19]);
+                requestService.addRequest(incident);
             }
 
         } catch (IOException e) {
@@ -269,66 +200,35 @@ public class PopulateDb implements CommandLineRunner {
             String line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-//                System.out.println(fields.length);
-//                for (int i=0; i<fields.length; i++)
-//                {
-//                    System.out.println(fields[i]);
-//                }
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase("")) {
-                    completionDate = sdf.parse(fields[2]);
-                }
-                String surface = fields[5];
-                String graffitiLocated = fields[6];
-
-                String streetAddress = fields[7];
-                Integer zip = null;
-                if (!fields[8].equalsIgnoreCase("")) {
-                    zip = Integer.parseInt(fields[8]);
-                }
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-
-                String ssa = null;
-
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
-
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
+                incident.setSurface(fields[5]);
+                incident.setGraffitiLocated(fields[6]);
+                incident.setStreetAddress(fields[7]);
+                if (!fields[8].equalsIgnoreCase(""))
+                    incident.setZipCode(Integer.parseInt(fields[8]));
                 if (!fields[9].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[9]);
+                    incident.setX(new BigDecimal(fields[9]));
                 if (!fields[10].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[10]);
+                    incident.setY(new BigDecimal(fields[10]));
                 if (!fields[11].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[11]);
+                    incident.setWard(Integer.parseInt(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[12]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[13]);
-
-                ssa = fields[14];
-
+                    incident.setCommunityArea(Integer.parseInt(fields[13]));
+                incident.setSsa(fields[14]);
                 if (!fields[15].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[15]);
+                    incident.setLatitude(new BigDecimal(fields[15]));
                 if (!fields[16].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[16]);
-                if (!fields[15].equalsIgnoreCase("") && !fields[16].equalsIgnoreCase("")) {                        List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                String location = fields[17];
-
-                Graffiti request = new Graffiti(creationDate, fields[1], completionDate, fields[3], fields[4], streetAddress,
-                        zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
-                        surface, graffitiLocated, ssa);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[16]));
+                incident.setLocation(fields[17]);
+                requestService.addRequest(incident);
             }
 
         } catch (IOException e) {
@@ -338,76 +238,44 @@ public class PopulateDb implements CommandLineRunner {
     }
 
     public void insertPotholes() throws Exception {
+        System.out.println("Insert Pot Holes");
         String csv = path + "311-service-requests-pot-holes-reported.csv";
 
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             String line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                /*System.out.println(fields.length);
-                for (int i=0; i<fields.length; i++)
-                {
-                    System.out.println(fields[i]);
-                }*/
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase(""))
-                    completionDate = sdf.parse(fields[2]);
-
-                String currentActivity = fields[5];
-                String mostRecentAction = fields[6];
-                Float potHoles = null;
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
+                incident.setCurrentActivity(fields[5]);
+                incident.setMostRecentAction(fields[6]);
                 if (!fields[7].equalsIgnoreCase(""))
-                    potHoles = Float.parseFloat(fields[7]);
-
-                String streetAddress = fields[8];
-                Integer zip = null;
-                if (!fields[9].equalsIgnoreCase("")) {
-                    zip = Integer.parseInt(fields[9]);
-                }
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-
-                String ssa = null;
-
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
-                String location = null;
+                    incident.setPotholes(Float.parseFloat(fields[7]));
+                incident.setStreetAddress(fields[8]);
+                if (!fields[9].equalsIgnoreCase(""))
+                    incident.setZipCode(Integer.parseInt(fields[9]));
                 if (!fields[10].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[10]);
+                    incident.setX(new BigDecimal(fields[10]));
                 if (!fields[11].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[11]);
+                    incident.setY(new BigDecimal(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[12]);
+                    incident.setWard(Integer.parseInt(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[13]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[13]));
                 if (!fields[14].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[14]);
-
-                ssa = fields[15];
-
+                    incident.setCommunityArea(Integer.parseInt(fields[14]));
+                incident.setSsa(fields[15]);
                 if (!fields[16].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[16]);
+                    incident.setLatitude(new BigDecimal(fields[16]));
                 if (!fields[17].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[17]);
-                if (!fields[15].equalsIgnoreCase("") && !fields[16].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                    location = fields[18];
-
-                Potholes request = new Potholes(creationDate, fields[1], completionDate, fields[3], "Pothole in Street",
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
-                        currentActivity, mostRecentAction, potHoles, ssa);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[17]));
+                incident.setLocation(fields[18]);
+                requestService.addRequest(incident);
             }
 
         } catch (IOException e) {
@@ -424,58 +292,32 @@ public class PopulateDb implements CommandLineRunner {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
-                String[] fields = line.split(split, -1);
-//                System.out.println(fields.length);
-//                for (int i=0; i<fields.length; i++)
-//                {
-//                    System.out.println(fields[i]);
-//                }
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase(""))
-                    completionDate = sdf.parse(fields[2]);
-                String streetAddress = null;
-                    streetAddress = fields[5];
-                Integer zip = null;
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
+                incident.setStreetAddress(fields[5]);
                 if (!fields[6].equalsIgnoreCase(""))
-                    zip = Integer.parseInt(fields[6]);
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
-                String location = null;
+                    incident.setZipCode(Integer.parseInt(fields[6]));
                 if (!fields[7].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[7]);
+                    incident.setX(new BigDecimal(fields[7]));
                 if (!fields[8].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[8]);
+                    incident.setY(new BigDecimal(fields[8]));
                 if (!fields[9].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[9]);
+                    incident.setWard(Integer.parseInt(fields[9]));
                 if (!fields[10].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[10]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[10]));
                 if (!fields[11].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[11]);
+                    incident.setCommunityArea(Integer.parseInt(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[12]);
+                    incident.setLatitude(new BigDecimal(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[13]);
-                if (!fields[12].equalsIgnoreCase("") && !fields[13].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                if (fields.length > 15) {
-                    location = fields[14] + "," + fields[15] + "," + fields[16];
-                }
-
-                AlleyLightsOut request = new AlleyLightsOut(creationDate, fields[1], completionDate, fields[3], fields[4],
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[13]));
+                incident.setLocation(fields[14]);
+                requestService.addRequest(incident);
 
             }
 
@@ -493,58 +335,32 @@ public class PopulateDb implements CommandLineRunner {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
-                String[] fields = line.split(split, -1);
-//                System.out.println(fields.length);
-//                for (int i=0; i<fields.length; i++)
-//                {
-//                    System.out.println(fields[i]);
-//                }
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase(""))
-                    completionDate = sdf.parse(fields[2]);
-                String streetAddress = null;
-                streetAddress = fields[5];
-                Integer zip = null;
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
+                incident.setStreetAddress(fields[5]);
                 if (!fields[6].equalsIgnoreCase(""))
-                    zip = Integer.parseInt(fields[6]);
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
-                String location = null;
+                    incident.setZipCode(Integer.parseInt(fields[6]));
                 if (!fields[7].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[7]);
+                    incident.setX(new BigDecimal(fields[7]));
                 if (!fields[8].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[8]);
+                    incident.setY(new BigDecimal(fields[8]));
                 if (!fields[9].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[9]);
+                    incident.setWard(Integer.parseInt(fields[9]));
                 if (!fields[10].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[10]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[10]));
                 if (!fields[11].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[11]);
+                    incident.setCommunityArea(Integer.parseInt(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[12]);
+                    incident.setLatitude(new BigDecimal(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[13]);
-                if (!fields[12].equalsIgnoreCase("") && !fields[13].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                if (fields.length > 15) {
-                    location = fields[14] + "," + fields[15] + "," + fields[16];
-                }
-
-                StreetLightsAllOut request = new StreetLightsAllOut(creationDate, fields[1], completionDate, fields[3], fields[4],
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[13]));
+                incident.setLocation(fields[14]);
+                requestService.addRequest(incident);
 
             }
 
@@ -562,61 +378,33 @@ public class PopulateDb implements CommandLineRunner {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
-                String[] fields = line.split(split, -1);
-//                System.out.println(fields.length);
-//                for (int i=0; i<fields.length; i++)
-//                {
-//                    System.out.println(fields[i]);
-//                }
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase(""))
-                    completionDate = sdf.parse(fields[2]);
-
-                String treeLocation = fields[5];
-
-                String streetAddress = fields[6];
-                Integer zip = null;
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
+                incident.setTreeLocation(fields[5]);
+                incident.setStreetAddress(fields[6]);
                 if (!fields[7].equalsIgnoreCase(""))
-                    zip = Integer.parseInt(fields[7]);
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
-                String location = null;
+                    incident.setZipCode(Integer.parseInt(fields[7]));
                 if (!fields[8].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[8]);
+                    incident.setX(new BigDecimal(fields[8]));
                 if (!fields[9].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[9]);
+                    incident.setY(new BigDecimal(fields[9]));
                 if (!fields[10].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[10]);
+                    incident.setWard(Integer.parseInt(fields[10]));
                 if (!fields[11].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[11]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[12]);
+                    incident.setCommunityArea(Integer.parseInt(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[13]);
+                    incident.setLatitude(new BigDecimal(fields[13]));
                 if (!fields[14].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[14]);
-                if (!fields[13].equalsIgnoreCase("") && !fields[14].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                if (fields.length > 16) {
-                    location = fields[15] + "," + fields[16] + "," + fields[17];
-                }
-
-                TreeTrims request = new TreeTrims(creationDate, fields[1], completionDate, fields[3], fields[4],
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
-                        treeLocation);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[14]));
+                incident.setLocation(fields[15]);
+                requestService.addRequest(incident);
 
             }
 
@@ -634,61 +422,35 @@ public class PopulateDb implements CommandLineRunner {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-//                System.out.println(fields.length);
-//                for (int i=0; i<fields.length; i++)
-//                {
-//                    System.out.println(fields[i]);
-//                }
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase(""))
-                    completionDate = sdf.parse(fields[2]);
-
-                String debrisLocation = fields[5];
-                String currentActivity = fields[6];
-                String mostRecentAction = fields[7];
-
-                String streetAddress = fields[8];
-                Integer zip = null;
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
+                incident.setDebrisLocations(fields[5]);
+                incident.setCurrentActivity(fields[6]);
+                incident.setMostRecentAction(fields[7]);
+                incident.setStreetAddress(fields[8]);
                 if (!fields[9].equalsIgnoreCase(""))
-                    zip = Integer.parseInt(fields[9]);
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
+                    incident.setZipCode(Integer.parseInt(fields[9]));
                 if (!fields[10].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[10]);
+                    incident.setX(new BigDecimal(fields[10]));
                 if (!fields[11].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[11]);
+                    incident.setY(new BigDecimal(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[12]);
+                    incident.setWard(Integer.parseInt(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[13]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[13]));
                 if (!fields[14].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[14]);
+                    incident.setCommunityArea(Integer.parseInt(fields[14]));
                 if (!fields[15].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[15]);
+                    incident.setLatitude(new BigDecimal(fields[15]));
                 if (!fields[16].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[16]);
-                if (!fields[15].equalsIgnoreCase("") && !fields[16].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-
-                String location = fields[17];
-
-                TreeDebris request = new TreeDebris(creationDate, fields[1], completionDate, fields[3], fields[4],
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
-                        debrisLocation, mostRecentAction, currentActivity);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[16]));
+                incident.setLocation(fields[17]);
+                requestService.addRequest(incident);
 
             }
 
@@ -706,69 +468,40 @@ public class PopulateDb implements CommandLineRunner {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                /*System.out.println(fields.length);
-                for (int i=0; i<fields.length; i++)
-                {
-                    System.out.println(fields[i]);
-                }*/
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase(""))
-                    completionDate = sdf.parse(fields[2]);
-
-                String plate = fields[5];
-                String model = fields[6];
-                String color = fields[7];
-                String currentActivity = fields[8];
-                String mostRecentAction = fields[9];
-                Double daysParked = null;
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
+                incident.setPlate(fields[5]);
+                incident.setModel(fields[6]);
+                incident.setColor(fields[7]);
+                incident.setCurrentActivity(fields[8]);
+                incident.setMostRecentAction(fields[9]);
                 if (!fields[10].equalsIgnoreCase(""))
-                    daysParked = Double.parseDouble(fields[10]);
-
-                String streetAddress = fields[11];
-                Integer zip = null;
+                    incident.setDaysParked(Double.parseDouble(fields[10]));
+                incident.setStreetAddress(fields[11]);
                 if (!fields[12].equalsIgnoreCase(""))
-                    zip = Integer.parseInt(fields[12]);
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
-                String location = null;
+                    incident.setZipCode(Integer.parseInt(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[13]);
+                    incident.setX(new BigDecimal(fields[13]));
                 if (!fields[14].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[14]);
+                    incident.setY(new BigDecimal(fields[14]));
                 if (!fields[15].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[15]);
+                    incident.setWard(Integer.parseInt(fields[15]));
                 if (!fields[16].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[16]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[16]));
                 if (!fields[17].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[17]);
-
-                String ssa = fields[18];
-
+                    incident.setCommunityArea(Integer.parseInt(fields[17]));
+                incident.setSsa(fields[18]);
                 if (!fields[19].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[19]);
+                    incident.setLatitude(new BigDecimal(fields[19]));
                 if (!fields[20].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[20]);
-                if (!fields[19].equalsIgnoreCase("") && !fields[20].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                    location = fields[21];
-
-                AbandonedVehicles request= new AbandonedVehicles(creationDate, fields[1], completionDate, fields[3], fields[4],
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
-                        plate, model, color, currentActivity, mostRecentAction, daysParked, ssa);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[20]));
+                incident.setLocation(fields[21]);
+                requestService.addRequest(incident);
 
             }
 
@@ -786,65 +519,37 @@ public class PopulateDb implements CommandLineRunner {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
 
-                // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-//                System.out.println(fields.length);
-//                for (int i=0; i<fields.length; i++)
-//                {
-//                    System.out.println(fields[i]);
-//                }
-                Date creationDate = sdf.parse(fields[0]);
-                Date completionDate = null;
-                if (!fields[2].equalsIgnoreCase(""))
-                    completionDate = sdf.parse(fields[2]);
-
-                Double numberOfCarts = null;
+                NewIncident incident = new NewIncident();
+                incident.setCreationDate(fields[0]);
+                incident.setStatus(fields[1]);
+                incident.setCompletionDate(fields[2]);
+                incident.setServiceRequestNumber(fields[3]);
+                incident.setTypeOfServiceRequest(fields[4]);
                 if (!fields[5].equalsIgnoreCase(""))
-                    numberOfCarts = Double.parseDouble(fields[5]);
-                String currentActivity = fields[6];
-                String mostRecentAction = fields[7];
-
-                String streetAddress = fields[8];
-                Integer zip = null;
+                    incident.setNumberOfCarts(Double.parseDouble(fields[5]));
+                incident.setCurrentActivity(fields[6]);
+                incident.setMostRecentAction(fields[7]);
+                incident.setStreetAddress(fields[8]);
                 if (!fields[9].equalsIgnoreCase(""))
-                    zip = Integer.parseInt(fields[9]);
-                BigDecimal x = null;
-                BigDecimal y = null;
-                Integer ward = null;
-                Integer policeDistrict = null;
-                Integer communityArea = null;
-                BigDecimal lat = null;
-                BigDecimal longit = null;
-                Point point = null;
+                    incident.setZipCode(Integer.parseInt(fields[9]));
                 if (!fields[10].equalsIgnoreCase(""))
-                    x = new BigDecimal(fields[10]);
+                    incident.setX(new BigDecimal(fields[10]));
                 if (!fields[11].equalsIgnoreCase(""))
-                    y = new BigDecimal(fields[11]);
+                    incident.setY(new BigDecimal(fields[11]));
                 if (!fields[12].equalsIgnoreCase(""))
-                    ward = Integer.parseInt(fields[12]);
+                    incident.setWard(Integer.parseInt(fields[12]));
                 if (!fields[13].equalsIgnoreCase(""))
-                    policeDistrict = Integer.parseInt(fields[13]);
+                    incident.setPoliceDistrict(Integer.parseInt(fields[13]));
                 if (!fields[14].equalsIgnoreCase(""))
-                    communityArea = Integer.parseInt(fields[14]);
-
-                String ssa = fields[15];
-
+                    incident.setCommunityArea(Integer.parseInt(fields[14]));
+                incident.setSsa(fields[15]);
                 if (!fields[16].equalsIgnoreCase(""))
-                    lat = new BigDecimal(fields[16]);
+                    incident.setLatitude(new BigDecimal(fields[16]));
                 if (!fields[17].equalsIgnoreCase(""))
-                    longit = new BigDecimal(fields[17]);
-                if (!fields[16].equalsIgnoreCase("") && !fields[17].equalsIgnoreCase("")) {
-                    List<Double> values = new ArrayList<>();
-                    values.add(lat.doubleValue());
-                    values.add(longit.doubleValue());
-                    point = new Point(new Position(values));
-                }
-                String location = fields[18];
-
-                GarbageCarts request = new GarbageCarts(creationDate, fields[1], completionDate, fields[3], fields[4],
-                        streetAddress, zip, x, y, ward, policeDistrict, communityArea, lat, longit, location, point,
-                        numberOfCarts, currentActivity, mostRecentAction,ssa);
-                requestRepository.save(request);
+                    incident.setLongitude(new BigDecimal(fields[17]));
+                incident.setLocation(fields[18]);
+                requestService.addRequest(incident);
 
             }
 
