@@ -51,7 +51,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>gr.uoa.di.m149_p2.CreateUsers</mainClass>
+                    <mainClass>gr.uoa.di.m149_p2.PopulateDb</mainClass>
                 </configuration>
             </plugin>
         </plugins>

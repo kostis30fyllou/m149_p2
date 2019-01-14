@@ -37,7 +37,7 @@ public class CreateUsers implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        Create();
+        //Create();
 
 
 
@@ -49,7 +49,7 @@ public class CreateUsers implements CommandLineRunner {
     }
 
     public void Create() {
-        System.out.println("Creating Users for DB");
+        /*System.out.println("Creating Users for DB");
 
         Faker faker = new Faker();
         usersRepository.deleteAll();
@@ -65,7 +65,7 @@ public class CreateUsers implements CommandLineRunner {
 
             User document = new User(name, telephone, address, null);
             usersRepository.save(document);
-        }
+        }*/
 
         Query query = new Query();
         query.with(new Sort(Sort.Direction.ASC, "_id"));
@@ -78,7 +78,7 @@ public class CreateUsers implements CommandLineRunner {
             System.out.println(user.getAddress());
         }
 
-        Aggregation aggregation = newAggregation(
+        /*Aggregation aggregation = newAggregation(
                 new CustomAggregationOperation(
                         new BasicDBObject(
                                 "$sample",
@@ -89,6 +89,6 @@ public class CreateUsers implements CommandLineRunner {
         System.out.println(aggregation);
 
         AggregationResults<User> result = mongoTemplate.aggregate(aggregation,User.class, User.class);
-        System.out.println(result);
+        System.out.println(result);*/
     }
 }

@@ -1,15 +1,13 @@
 package gr.uoa.di.m149_p2.controller;
 
 import gr.uoa.di.m149_p2.dto.NewIncident;
+import gr.uoa.di.m149_p2.error.CustomError;
 import gr.uoa.di.m149_p2.models.Request;
 import gr.uoa.di.m149_p2.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/save/")
@@ -25,12 +23,18 @@ public class RequestController {
             if(request != null) {
                 return new ResponseEntity<>(request, HttpStatus.OK);
             }
-            else return new ResponseEntity<>(Object.class, HttpStatus.BAD_REQUEST);
+            else {
+                CustomError error = new CustomError("Cannot find this type of request", HttpStatus.NOT_ACCEPTABLE);
+                return new ResponseEntity<>(error, HttpStatus.NOT_ACCEPTABLE);
+            }
         } catch (Exception e) {
-            return new ResponseEntity<>(Object.class, HttpStatus.BAD_REQUEST);
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
     }
+
+
 }
 
 

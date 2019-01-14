@@ -47,8 +47,8 @@ public class PopulateDb implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         requestRepository.deleteAll();
-        insertStreetLightOut();//done
-        insertSanitation();// done
+        //insertStreetLightOut();//done
+        /*insertSanitation();// done
         insertRodentBaiting();// done
         insertGraffiti();// done
         insertPotholes();// done
@@ -57,7 +57,7 @@ public class PopulateDb implements CommandLineRunner {
         insertTreeTrims();// done
         insertTreeDebris();// done
         insertAbandonedVehicles(); //done
-        insertGarbageCarts(); //done
+        insertGarbageCarts(); //done*/
     }
 
     public void insertStreetLightOut() throws Exception {
