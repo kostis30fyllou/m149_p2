@@ -25,4 +25,4 @@
 /.nb-gradle/
 
 #properties
-*.properties
+src/resources/application.properties

@@ -19,7 +19,6 @@ public class UserController {
     @GetMapping(value = "/getUsers")
     @CrossOrigin()
     public ResponseEntity<?> getUsers() {
-        System.out.println("called it");
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 }
