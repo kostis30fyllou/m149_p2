@@ -46,18 +46,18 @@ public class PopulateDb implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        requestRepository.deleteAll();
-        //insertStreetLightOut();//done
-        /*insertSanitation();// done
-        insertRodentBaiting();// done
-        insertGraffiti();// done
-        insertPotholes();// done
-        insertAlleyLightsOut();// done
-        insertStreetLightsAllOut();// done
-        insertTreeTrims();// done
-        insertTreeDebris();// done
-        insertAbandonedVehicles(); //done
-        insertGarbageCarts(); //done*/
+//        requestRepository.deleteAll();
+//        insertStreetLightOut();//done
+//        insertSanitation();// done
+//        insertRodentBaiting();// done
+//        insertGraffiti();// done
+//        insertPotholes();// done
+//        insertAlleyLightsOut();// done
+//        insertStreetLightsAllOut();// done
+//        insertTreeTrims();// done
+//        insertTreeDebris();// done
+//        insertAbandonedVehicles(); //done
+//        insertGarbageCarts(); //done
     }
 
     public void insertStreetLightOut() throws Exception {

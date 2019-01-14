@@ -2,18 +2,13 @@ package gr.uoa.di.m149_p2;
 
 import com.github.javafaker.Faker;
 
-import com.mongodb.BasicDBObject;
 import gr.uoa.di.m149_p2.dal.UsersRepository;
-import gr.uoa.di.m149_p2.dto.CustomAggregationOperation;
 import gr.uoa.di.m149_p2.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -37,7 +32,7 @@ public class CreateUsers implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //Create();
+        Create();
 
 
 
@@ -49,7 +44,7 @@ public class CreateUsers implements CommandLineRunner {
     }
 
     public void Create() {
-        /*System.out.println("Creating Users for DB");
+        System.out.println("Creating Users for DB");
 
         Faker faker = new Faker();
         usersRepository.deleteAll();
@@ -65,7 +60,7 @@ public class CreateUsers implements CommandLineRunner {
 
             User document = new User(name, telephone, address, null);
             usersRepository.save(document);
-        }*/
+        }
 
         Query query = new Query();
         query.with(new Sort(Sort.Direction.ASC, "_id"));
@@ -78,17 +73,5 @@ public class CreateUsers implements CommandLineRunner {
             System.out.println(user.getAddress());
         }
 
-        /*Aggregation aggregation = newAggregation(
-                new CustomAggregationOperation(
-                        new BasicDBObject(
-                                "$sample",
-                                new BasicDBObject( "size", 1 )
-                        )
-                )
-        );
-        System.out.println(aggregation);
-
-        AggregationResults<User> result = mongoTemplate.aggregate(aggregation,User.class, User.class);
-        System.out.println(result);*/
     }
 }
