@@ -5,6 +5,7 @@ import com.mongodb.client.model.geojson.Position;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
+import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
 import gr.uoa.di.m149_p2.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,18 +47,22 @@ public class PopulateDb implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-//        requestRepository.deleteAll();
-//        insertStreetLightOut();//done
-//        insertSanitation();// done
-//        insertRodentBaiting();// done
-//        insertGraffiti();// done
-//        insertPotholes();// done
-//        insertAlleyLightsOut();// done
-//        insertStreetLightsAllOut();// done
-//        insertTreeTrims();// done
-//        insertTreeDebris();// done
-//        insertAbandonedVehicles(); //done
-//        insertGarbageCarts(); //done
+        /*requestRepository.deleteAll();
+        insertStreetLightOut();//done
+        insertSanitation();// done
+        insertRodentBaiting();// done
+        insertGraffiti();// done
+        insertPotholes();// done
+        insertAlleyLightsOut();// done
+        insertStreetLightsAllOut();// done
+        insertTreeTrims();// done
+        insertTreeDebris();// done
+        insertAbandonedVehicles(); //done
+        insertGarbageCarts(); //done*/
+        List<TotalTypeRequests> results = requestService.getTotalTypeRequests("2011-01-12 00:00:00", "2012-01-12 00:00:00");
+        for (TotalTypeRequests result : results) {
+            System.out.println("Type:" + result.getTypeOfServiceRequest() + " count: " + result.getCount());
+        }
     }
 
     public void insertStreetLightOut() throws Exception {

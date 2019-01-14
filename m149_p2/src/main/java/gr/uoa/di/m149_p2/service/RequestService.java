@@ -2,10 +2,18 @@ package gr.uoa.di.m149_p2.service;
 
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
+import gr.uoa.di.m149_p2.dal.RequestDalImpl;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
+import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,7 +28,17 @@ public class RequestService {
     @Autowired
     RequestRepository requestRepository;
 
+    @Autowired
+    RequestDalImpl requestDal;
+
+
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+    public List<TotalTypeRequests> getTotalTypeRequests(String startDate, String endDate) throws Exception{
+        Date start = sdf.parse(startDate);
+        Date end = sdf.parse(endDate);
+        return requestDal.getTotalTypeRequests(start, end);
+    }
 
     public Request addRequest(NewIncident incident) throws Exception{
         if(incident == null) {
