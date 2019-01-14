@@ -1,7 +1,9 @@
 package gr.uoa.di.m149_p2.models;
 
 import com.mongodb.client.model.geojson.Point;
+import com.mongodb.util.JSON;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -28,9 +30,13 @@ public class Request {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String location;
+//    private String point;
+//    private GeoJsonPoint point;
     private Point point;
     private Integer upVotes;
 
+    public Request() {
+    }
 
     public Request(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
                    String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict,
@@ -53,6 +59,14 @@ public class Request {
         this.point = point;
         this.upVotes = upVotes;
     }
+
+//    public String getPoint() {
+//        return point;
+//    }
+//
+//    public void setPoint(String point) {
+//        this.point = point;
+//    }
 
     public String getId() {
         return id;

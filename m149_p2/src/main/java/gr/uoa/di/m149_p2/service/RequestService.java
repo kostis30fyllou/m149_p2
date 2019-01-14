@@ -8,12 +8,6 @@ import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
 import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.GroupOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
