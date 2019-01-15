@@ -17,7 +17,7 @@ public class AbandonedVehicles extends Request{
     private Double daysParked;
     private String ssa;
 
-    public AbandonedVehicles(Integer id, Date creationDate, String status, Date completionDate, String serviceRequestNumber,
+    public AbandonedVehicles(Long id, Date creationDate, String status, Date completionDate, String serviceRequestNumber,
                              String typeOfServiceRequest, String streetAddress, Integer zipCode, BigDecimal x,
                              BigDecimal y, Integer ward, Integer policeDistrict, Integer communityArea,
                              BigDecimal latitude, BigDecimal longitude, String location, GeoJsonPoint point,

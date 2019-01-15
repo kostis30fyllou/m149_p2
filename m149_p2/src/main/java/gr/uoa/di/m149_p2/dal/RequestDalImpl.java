@@ -59,7 +59,8 @@ public class RequestDalImpl implements RequestDal{
                 Aggregation.project("typeOfServiceRequest").
                         andExpression("(completionDate-creationDate)/(24*60*60*1000)").as("completion"),
                 Aggregation.group("typeOfServiceRequest").
-                        avg("completion").as("avg"));
+                        avg("completion").as("avg"),
+                Aggregation.project("avg").and("typeOfServiceRequest").previousOperation());
         AggregationResults<AvgRequestCompletion> results = mongoTemplate.
                 aggregate(agg, Request.class, AvgRequestCompletion.class);
         return results.getMappedResults();

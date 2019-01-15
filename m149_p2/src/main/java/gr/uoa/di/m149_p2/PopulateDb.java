@@ -47,12 +47,11 @@ public class PopulateDb implements CommandLineRunner {
         SpringApplication.run(PopulateDb.class, args);
     }
 
-    private Integer id = 0;
 
     @Override
     public void run(String... args) throws Exception {
 
-        /*requestRepository.deleteAll();
+        requestRepository.deleteAll();
         insertStreetLightOut();//done
         insertSanitation();// done
         insertRodentBaiting();// done
@@ -63,7 +62,7 @@ public class PopulateDb implements CommandLineRunner {
         insertTreeTrims();// done
         insertTreeDebris();// done
         insertAbandonedVehicles(); //done
-        insertGarbageCarts(); //done*/
+        insertGarbageCarts(); //done
         /*List<DailyRequests> results = requestService.getDailyRequests("Tree Trim","2011-01-12 00:00:00", "2012-01-12 00:00:00");
         for (DailyRequests result : results) {
             System.out.println("Creation Date:" + sdf.format(result.getCreationDate()) + " count: " + result.getCount());
@@ -75,10 +74,10 @@ public class PopulateDb implements CommandLineRunner {
 //
 //        List<Request> requests = requestRepository.findAll();
 //        System.out.println(requests.get(0).getPoint().toString());
-        List<AvgRequestCompletion> results = requestService.getAvgRequestCompletion("2011-01-01 00:00:00", "2012-08-01 00:00:00");
+        /*List<AvgRequestCompletion> results = requestService.getAvgRequestCompletion("2011-01-01 00:00:00", "2012-08-01 00:00:00");
         for (AvgRequestCompletion result : results) {
             System.out.println("Creation Date:" + result.getTypeOfServiceRequest() + " count: " + result.getAvg());
-        }
+        }*/
         /*List<LeastCommonWards> results = requestService.getLeastCommonWards("Tree Trim");
         for (LeastCommonWards result : results) {
             System.out.println("Ward:" + result.getWard() + " count: " + result.getCount());
@@ -93,10 +92,8 @@ public class PopulateDb implements CommandLineRunner {
        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
            line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -136,10 +133,8 @@ public class PopulateDb implements CommandLineRunner {
             String line = br.readLine();
 
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -179,11 +174,9 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             String line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 // use comma as separator
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -230,10 +223,8 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             String line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -276,10 +267,8 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             String line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -324,10 +313,8 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -368,10 +355,8 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -412,10 +397,8 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -457,10 +440,8 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -504,10 +485,8 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);
@@ -556,10 +535,8 @@ public class PopulateDb implements CommandLineRunner {
         try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
             line = br.readLine();
             while ((line = br.readLine()) != null) {
-                id++;
                 String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 NewIncident incident = new NewIncident();
-                incident.setId(id);
                 incident.setCreationDate(fields[0]);
                 incident.setStatus(fields[1]);
                 incident.setCompletionDate(fields[2]);

@@ -3,6 +3,7 @@ package gr.uoa.di.m149_p2.controller;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.error.CustomError;
 import gr.uoa.di.m149_p2.models.Request;
+import gr.uoa.di.m149_p2.models.queries.AvgRequestCompletion;
 import gr.uoa.di.m149_p2.models.queries.DailyRequests;
 import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
 import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
@@ -67,6 +68,18 @@ public class RequestController {
     public ResponseEntity<?> getLeastCommonWards(@RequestParam String type) {
         try {
             List<LeastCommonWards> results = requestService.getLeastCommonWards(type);
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+
+    }
+
+    @GetMapping(value = "/getAvgRequestCompletion")
+    public ResponseEntity<?> getAvgRequestCompletion(@RequestParam String startDate, @RequestParam String endDate) {
+        try {
+            List<AvgRequestCompletion> results = requestService.getAvgRequestCompletion(startDate, endDate);
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -12,7 +12,7 @@ public class Request {
 
 
     @Id
-    private Integer id;
+    private Long id;
     private Date creationDate;
     private String status;
     private Date completionDate;
@@ -34,7 +34,7 @@ public class Request {
     public Request() {
     }
 
-    public Request(Integer id, Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
+    public Request(Long id, Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
                    String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict,
                    Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, GeoJsonPoint point, Integer upVotes) {
         this.id = id;
@@ -57,11 +57,11 @@ public class Request {
         this.upVotes = upVotes;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

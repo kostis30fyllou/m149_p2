@@ -3,7 +3,7 @@ package gr.uoa.di.m149_p2.dto;
 import java.math.BigDecimal;
 
 public class NewIncident {
-    private Integer id;
+    private Long id;
     private String creationDate;
     private String status;
     private String completionDate;
@@ -42,11 +42,11 @@ public class NewIncident {
 
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -57,7 +57,7 @@ public class RequestService {
         if(incident == null) {
             return  null;
         }
-        Integer id = incident.getId();
+        Long id = incident.getId();
         Date creationDate = null;
         String status = null;
         Date completionDate = null;
@@ -75,6 +75,9 @@ public class RequestService {
         String location = null;
         GeoJsonPoint point = null;
         Integer upVotes = 0;
+        if(id == null) {
+            id = requestRepository.count() + 1;
+        }
         if(incident.getCreationDate() == null) {
             creationDate = new Date();
         }
