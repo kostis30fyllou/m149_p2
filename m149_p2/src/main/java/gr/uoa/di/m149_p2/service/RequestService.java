@@ -51,6 +51,7 @@ public class RequestService {
         if(incident == null) {
             return  null;
         }
+        Integer id = incident.getId();
         Date creationDate = null;
         String status = null;
         Date completionDate = null;
@@ -112,13 +113,13 @@ public class RequestService {
             String mostRecentAction = incident.getMostRecentAction();
             Double daysParked = incident.getDaysParked();
             String ssa = incident.getSsa();
-            AbandonedVehicles request = new AbandonedVehicles(creationDate, status, completionDate, serviceRequestNumber, typeOfServiceRequest, streetAddress,
+            AbandonedVehicles request = new AbandonedVehicles(id, creationDate, status, completionDate, serviceRequestNumber, typeOfServiceRequest, streetAddress,
                     zipCode, x, y, ward, policeDistrict, communityArea, latitude, longitude, location, point, upVotes, plate, model, color, currentActivity, mostRecentAction,
                     daysParked, ssa);
             return requestRepository.save(request);
         }
         else if(typeOfServiceRequest.equals("Alley Light Out")) {
-            AlleyLightsOut request = new AlleyLightsOut(creationDate, status, completionDate, serviceRequestNumber,
+            AlleyLightsOut request = new AlleyLightsOut(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes);
             return requestRepository.save(request);
@@ -128,7 +129,7 @@ public class RequestService {
             String currentActivity = incident.getCurrentActivity();
             String mostRecenetAction = incident.getMostRecentAction();
             String ssa = incident.getSsa();
-            GarbageCarts request = new GarbageCarts(creationDate, status, completionDate, serviceRequestNumber,
+            GarbageCarts request = new GarbageCarts(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes, numberOfCarts, currentActivity, mostRecenetAction, ssa);
             return requestRepository.save(request);
@@ -137,7 +138,7 @@ public class RequestService {
             String surface = incident.getSurface();
             String graffitiLocated = incident.getGraffitiLocated();
             String ssa = incident.getSsa();
-            Graffiti request = new Graffiti(creationDate, status, completionDate, serviceRequestNumber,
+            Graffiti request = new Graffiti(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes, surface, graffitiLocated, ssa);
             return requestRepository.save(request);
@@ -147,7 +148,7 @@ public class RequestService {
             String mostRecenetAction = incident.getMostRecentAction();
             Float potholes = incident.getPotholes();
             String ssa = incident.getSsa();
-            Potholes request = new Potholes(creationDate, status, completionDate, serviceRequestNumber,
+            Potholes request = new Potholes(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes, currentActivity, mostRecenetAction, potholes, ssa);
             return requestRepository.save(request);
@@ -158,26 +159,26 @@ public class RequestService {
             Float premisesWithRats = incident.getPremisesWithRats();
             String currentActivity = incident.getCurrentActivity();
             String mostRecenetAction = incident.getMostRecentAction();
-            RodentBaiting request = new RodentBaiting(creationDate, status, completionDate, serviceRequestNumber,
+            RodentBaiting request = new RodentBaiting(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes, premisesBaited, premisesWithGarbage, premisesWithRats, currentActivity, mostRecenetAction);
             return requestRepository.save(request);
         }
         else if(typeOfServiceRequest.equals("Sanitation Code Violation")) {
             String codeViolation = incident.getCodeViolation();
-            Sanitation request = new Sanitation(creationDate, status, completionDate, serviceRequestNumber,
+            Sanitation request = new Sanitation(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes, codeViolation);
             return requestRepository.save(request);
         }
         else if(typeOfServiceRequest.equals("Street Light Out")) {
-            StreetLightOut request = new StreetLightOut(creationDate, status, completionDate, serviceRequestNumber,
+            StreetLightOut request = new StreetLightOut(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes);
             return requestRepository.save(request);
         }
         else if(typeOfServiceRequest.equals("Street Lights - All/Out")) {
-            StreetLightsAllOut request = new StreetLightsAllOut(creationDate, status, completionDate, serviceRequestNumber,
+            StreetLightsAllOut request = new StreetLightsAllOut(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes);
             return requestRepository.save(request);
@@ -186,14 +187,14 @@ public class RequestService {
             String debrisLocations = incident.getDebrisLocations();
             String currentActivity = incident.getCurrentActivity();
             String mostRecenetAction = incident.getMostRecentAction();
-            TreeDebris request = new TreeDebris(creationDate, status, completionDate, serviceRequestNumber,
+            TreeDebris request = new TreeDebris(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes, debrisLocations, currentActivity, mostRecenetAction);
             return requestRepository.save(request);
         }
         else if(typeOfServiceRequest.equals("Tree Trim")) {
             String treeLocation = incident.getTreeLocation();
-            TreeTrims request = new TreeTrims(creationDate, status, completionDate, serviceRequestNumber,
+            TreeTrims request = new TreeTrims(id, creationDate, status, completionDate, serviceRequestNumber,
                     typeOfServiceRequest, streetAddress, zipCode, x, y, ward, policeDistrict, communityArea, latitude,
                     longitude, location, point, upVotes, treeLocation);
             return requestRepository.save(request);

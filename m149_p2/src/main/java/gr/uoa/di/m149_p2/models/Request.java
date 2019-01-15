@@ -14,7 +14,7 @@ public class Request {
 
 
     @Id
-    private String id;
+    private Integer id;
     private Date creationDate;
     private String status;
     private Date completionDate;
@@ -37,9 +37,10 @@ public class Request {
     public Request() {
     }
 
-    public Request(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
+    public Request(Integer id, Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
                    String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict,
                    Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, GeoJsonPoint point, Integer upVotes) {
+        this.id = id;
         this.creationDate = creationDate;
         this.status = status;
         this.completionDate = completionDate;
@@ -59,11 +60,11 @@ public class Request {
         this.upVotes = upVotes;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

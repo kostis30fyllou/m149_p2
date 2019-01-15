@@ -3,6 +3,7 @@ package gr.uoa.di.m149_p2.dto;
 import java.math.BigDecimal;
 
 public class NewIncident {
+    private Integer id;
     private String creationDate;
     private String status;
     private String completionDate;
@@ -39,6 +40,14 @@ public class NewIncident {
 
     public NewIncident() {
 
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getUpVotes() {

@@ -85,12 +85,12 @@ public class CreateUsers implements CommandLineRunner {
         System.out.println(output.getRawResults().values());
         System.out.println(output.getMappedResults().get(0).getName());
 
-        Aggregation agg = Aggregation.newAggregation(Aggregation.sort(Sort.Direction.DESC, "id"));
-        AggregationResults<Request> results = mongoTemplate.aggregate(agg, Request.class, Request.class);
+//        Aggregation agg = Aggregation.newAggregation(Aggregation.sort(Sort.Direction.DESC, "id"));
+//        AggregationResults<Request> results = mongoTemplate.aggregate(agg, Request.class, Request.class);
+//
+//        System.out.println(results.getMappedResults().get(1));
 
-        System.out.println(results.getMappedResults().get(1));
-
-//        AggregationResults<Request> output2 = mongoTemplate.aggregate(aggregation, Request.class, Request.class);
-//        System.out.println(output2.getMappedResults().get(0));
+        AggregationResults<Request> output2 = mongoTemplate.aggregate(aggregation, Request.class, Request.class);
+        System.out.println(output2.getMappedResults().get(0).getId());
     }
 }
