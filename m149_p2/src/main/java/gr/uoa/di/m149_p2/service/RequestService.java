@@ -6,8 +6,11 @@ import gr.uoa.di.m149_p2.dal.RequestDalImpl;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
+import gr.uoa.di.m149_p2.models.queries.DailyRequests;
+import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
 import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,12 +29,22 @@ public class RequestService {
     RequestDalImpl requestDal;
 
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public List<TotalTypeRequests> getTotalTypeRequests(String startDate, String endDate) throws Exception{
         Date start = sdf.parse(startDate);
         Date end = sdf.parse(endDate);
         return requestDal.getTotalTypeRequests(start, end);
+    }
+
+    public List<DailyRequests> getDailyRequests(String type, String startDate, String endDate) throws Exception {
+        Date start = sdf.parse(startDate);
+        Date end = sdf.parse(endDate);
+        return requestDal.getDailyRequests(type, start, end);
+    }
+
+    public List<LeastCommonWards> getLeastCommonWards(String type) {
+        return requestDal.getLeastCommonWards(type);
     }
 
     public Request addRequest(NewIncident incident) throws Exception{
@@ -53,7 +66,7 @@ public class RequestService {
         BigDecimal latitude = null;
         BigDecimal longitude = null;
         String location = null;
-        Point point = null;
+        GeoJsonPoint point = null;
         Integer upVotes = 0;
         if(incident.getCreationDate() == null) {
             creationDate = new Date();
@@ -89,10 +102,7 @@ public class RequestService {
         }
         else location = incident.getLocation();
         if(latitude != null && longitude != null) {
-            List<Double> values = new ArrayList<>();
-            values.add(latitude.doubleValue());
-            values.add(longitude.doubleValue());
-            point = new Point(new Position(values));
+            point = new GeoJsonPoint(latitude.doubleValue(), longitude.doubleValue());
         }
         if(typeOfServiceRequest.equals("Abandoned Vehicle Complaint")) {
             String plate = incident.getPlate();

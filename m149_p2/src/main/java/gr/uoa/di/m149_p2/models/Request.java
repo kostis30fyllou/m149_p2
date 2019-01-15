@@ -31,8 +31,7 @@ public class Request {
     private BigDecimal longitude;
     private String location;
 //    private String point;
-//    private GeoJsonPoint point;
-    private Point point;
+    private GeoJsonPoint point;
     private Integer upVotes;
 
     public Request() {
@@ -40,7 +39,7 @@ public class Request {
 
     public Request(Date creationDate, String status, Date completionDate, String serviceRequestNumber, String typeOfServiceRequest,
                    String streetAddress, Integer zipCode, BigDecimal x, BigDecimal y, Integer ward, Integer policeDistrict,
-                   Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, Point point, Integer upVotes) {
+                   Integer communityArea, BigDecimal latitude, BigDecimal longitude, String location, GeoJsonPoint point, Integer upVotes) {
         this.creationDate = creationDate;
         this.status = status;
         this.completionDate = completionDate;
@@ -59,14 +58,6 @@ public class Request {
         this.point = point;
         this.upVotes = upVotes;
     }
-
-//    public String getPoint() {
-//        return point;
-//    }
-//
-//    public void setPoint(String point) {
-//        this.point = point;
-//    }
 
     public String getId() {
         return id;
@@ -196,11 +187,11 @@ public class Request {
         this.location = location;
     }
 
-    public Point getPoint() {
+    public GeoJsonPoint getPoint() {
         return point;
     }
 
-    public void setPoint(Point point) {
+    public void setPoint(GeoJsonPoint point) {
         this.point = point;
     }
 
