@@ -5,6 +5,7 @@ import com.github.javafaker.Faker;
 import gr.uoa.di.m149_p2.dal.UsersRepository;
 import gr.uoa.di.m149_p2.models.Request;
 import gr.uoa.di.m149_p2.models.User;
+import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.SampleOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
@@ -34,7 +36,7 @@ public class CreateUsers implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //Create();
+        Create();
 
 
 
@@ -82,7 +84,13 @@ public class CreateUsers implements CommandLineRunner {
         System.out.println(output.getRawResults());
         System.out.println(output.getRawResults().values());
         System.out.println(output.getMappedResults().get(0).getName());
-        AggregationResults<Request> output2 = mongoTemplate.aggregate(aggregation, "request", Request.class);
 
+        Aggregation agg = Aggregation.newAggregation(Aggregation.sort(Sort.Direction.DESC, "id"));
+        AggregationResults<Request> results = mongoTemplate.aggregate(agg, Request.class, Request.class);
+
+        System.out.println(results.getMappedResults().get(1));
+
+//        AggregationResults<Request> output2 = mongoTemplate.aggregate(aggregation, Request.class, Request.class);
+//        System.out.println(output2.getMappedResults().get(0));
     }
 }
