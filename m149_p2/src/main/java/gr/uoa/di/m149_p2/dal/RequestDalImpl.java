@@ -1,14 +1,15 @@
 package gr.uoa.di.m149_p2.dal;
 
 import gr.uoa.di.m149_p2.models.Request;
+import gr.uoa.di.m149_p2.models.queries.AvgRequestCompletion;
 import gr.uoa.di.m149_p2.models.queries.DailyRequests;
 import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
 import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
@@ -47,6 +48,18 @@ public class RequestDalImpl implements RequestDal{
                 Aggregation.project("count").and("ward").previousOperation(),
                 Aggregation.sort(Sort.Direction.ASC, "count"), Aggregation.limit(3));
         AggregationResults<LeastCommonWards> results = mongoTemplate.aggregate(agg, Request.class, LeastCommonWards.class);
+        return results.getMappedResults();
+    }
+
+    @Override
+    public List<AvgRequestCompletion> getAvgRequestCompletion(Date startDate, Date endDate) {
+        Aggregation agg = Aggregation.newAggregation(Aggregation.match(Criteria.where("creationDate").exists(true).
+                gte(startDate).lte(endDate).and("completionDate").gte(startDate).lte(endDate)),
+                Aggregation.project("typeOfServiceRequest").andExpression("(completionDate-creationDate)/(24*60*60*1000)").
+                        as("completion"), Aggregation.group("typeOfServiceRequest").
+                        avg("completion").as("avg"));
+        AggregationResults<AvgRequestCompletion> results = mongoTemplate.
+                aggregate(agg, Request.class, AvgRequestCompletion.class);
         return results.getMappedResults();
     }
 }

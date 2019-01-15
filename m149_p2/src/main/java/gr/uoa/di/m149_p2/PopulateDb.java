@@ -5,6 +5,7 @@ import com.mongodb.client.model.geojson.Position;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
+import gr.uoa.di.m149_p2.models.queries.AvgRequestCompletion;
 import gr.uoa.di.m149_p2.models.queries.DailyRequests;
 import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
 import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
@@ -46,15 +47,15 @@ public class PopulateDb implements CommandLineRunner {
         SpringApplication.run(PopulateDb.class, args);
     }
 
-    private Integer id =0;
+    private Integer id = 0;
 
     @Override
     public void run(String... args) throws Exception {
 
-        requestRepository.deleteAll();
+        /*requestRepository.deleteAll();
         insertStreetLightOut();//done
         insertSanitation();// done
-        /*insertRodentBaiting();// done
+        insertRodentBaiting();// done
         insertGraffiti();// done
         insertPotholes();// done
         insertAlleyLightsOut();// done
@@ -74,6 +75,15 @@ public class PopulateDb implements CommandLineRunner {
 //
 //        List<Request> requests = requestRepository.findAll();
 //        System.out.println(requests.get(0).getPoint().toString());
+        List<AvgRequestCompletion> results = requestService.getAvgRequestCompletion("2011-01-01 00:00:00", "2012-08-01 00:00:00");
+        for (AvgRequestCompletion result : results) {
+            System.out.println("Creation Date:" + result.getTypeOfServiceRequest() + " count: " + result.getAvg());
+        }
+        /*List<LeastCommonWards> results = requestService.getLeastCommonWards("Tree Trim");
+        for (LeastCommonWards result : results) {
+            System.out.println("Ward:" + result.getWard() + " count: " + result.getCount());
+        }*/
+
     }
 
     public void insertStreetLightOut() throws Exception {

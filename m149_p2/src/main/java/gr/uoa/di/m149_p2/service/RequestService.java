@@ -6,6 +6,7 @@ import gr.uoa.di.m149_p2.dal.RequestDalImpl;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
+import gr.uoa.di.m149_p2.models.queries.AvgRequestCompletion;
 import gr.uoa.di.m149_p2.models.queries.DailyRequests;
 import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
 import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +45,12 @@ public class RequestService {
 
     public List<LeastCommonWards> getLeastCommonWards(String type) {
         return requestDal.getLeastCommonWards(type);
+    }
+
+    public List<AvgRequestCompletion> getAvgRequestCompletion(String startDate, String endDate) throws Exception {
+        Date start = sdf.parse(startDate);
+        Date end = sdf.parse(endDate);
+        return requestDal.getAvgRequestCompletion(start, end);
     }
 
     public Request addRequest(NewIncident incident) throws Exception{

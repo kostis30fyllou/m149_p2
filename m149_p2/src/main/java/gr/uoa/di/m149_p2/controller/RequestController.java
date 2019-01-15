@@ -4,6 +4,7 @@ import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.error.CustomError;
 import gr.uoa.di.m149_p2.models.Request;
 import gr.uoa.di.m149_p2.models.queries.DailyRequests;
+import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
 import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
 import gr.uoa.di.m149_p2.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,18 @@ public class RequestController {
     public ResponseEntity<?> getDailyRequests(@RequestParam String type, @RequestParam String startDate, @RequestParam String endDate) {
         try {
             List<DailyRequests> results = requestService.getDailyRequests(type, startDate, endDate);
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+
+    }
+
+    @GetMapping(value = "/getLeastCommonWards")
+    public ResponseEntity<?> getLeastCommonWards(@RequestParam String type) {
+        try {
+            List<LeastCommonWards> results = requestService.getLeastCommonWards(type);
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
