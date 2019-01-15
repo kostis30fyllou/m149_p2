@@ -53,10 +53,12 @@ public class RequestDalImpl implements RequestDal{
 
     @Override
     public List<AvgRequestCompletion> getAvgRequestCompletion(Date startDate, Date endDate) {
-        Aggregation agg = Aggregation.newAggregation(Aggregation.match(Criteria.where("creationDate").exists(true).
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("creationDate").exists(true).
                 gte(startDate).lte(endDate).and("completionDate").gte(startDate).lte(endDate)),
-                Aggregation.project("typeOfServiceRequest").andExpression("(completionDate-creationDate)/(24*60*60*1000)").
-                        as("completion"), Aggregation.group("typeOfServiceRequest").
+                Aggregation.project("typeOfServiceRequest").
+                        andExpression("(completionDate-creationDate)/(24*60*60*1000)").as("completion"),
+                Aggregation.group("typeOfServiceRequest").
                         avg("completion").as("avg"));
         AggregationResults<AvgRequestCompletion> results = mongoTemplate.
                 aggregate(agg, Request.class, AvgRequestCompletion.class);

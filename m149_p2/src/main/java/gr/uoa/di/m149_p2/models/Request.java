@@ -1,7 +1,5 @@
 package gr.uoa.di.m149_p2.models;
 
-import com.mongodb.client.model.geojson.Point;
-import com.mongodb.util.JSON;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,7 +28,6 @@ public class Request {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String location;
-//    private String point;
     private GeoJsonPoint point;
     private Integer upVotes;
 
