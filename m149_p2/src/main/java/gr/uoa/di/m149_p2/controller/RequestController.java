@@ -1,12 +1,10 @@
 package gr.uoa.di.m149_p2.controller;
 
+import gr.uoa.di.m149_p2.dto.GeoPass;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.error.CustomError;
 import gr.uoa.di.m149_p2.models.Request;
-import gr.uoa.di.m149_p2.models.queries.AvgRequestCompletion;
-import gr.uoa.di.m149_p2.models.queries.DailyRequests;
-import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
-import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
+import gr.uoa.di.m149_p2.models.queries.*;
 import gr.uoa.di.m149_p2.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,6 +62,18 @@ public class RequestController {
 
     }
 
+    @GetMapping(value = "/getMostCommonTypes")
+    public ResponseEntity<?> getMostCommonTypes(@RequestParam String date) {
+        try {
+            List<MostCommonTypes> results = requestService.getMostCommonTypes(date);
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+
+    }
+
     @GetMapping(value = "/getLeastCommonWards")
     public ResponseEntity<?> getLeastCommonWards(@RequestParam String type) {
         try {
@@ -87,6 +97,19 @@ public class RequestController {
         }
 
     }
+
+    @GetMapping(value = "/getMostCommonRequest")
+    public ResponseEntity<?> getAvgRequestCompletion(@RequestBody GeoPass gp) {
+        try {
+            TotalTypeRequests result = requestService.getMostCommonRequest(gp.getDate(), gp.getP1(), gp.getP2());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+
+    }
+
 }
 
 

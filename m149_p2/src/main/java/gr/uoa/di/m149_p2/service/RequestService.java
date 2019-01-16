@@ -1,19 +1,17 @@
 package gr.uoa.di.m149_p2.service;
 
-import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import gr.uoa.di.m149_p2.dal.RequestDalImpl;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
+import gr.uoa.di.m149_p2.dto.CustomPoint;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
-import gr.uoa.di.m149_p2.models.queries.AvgRequestCompletion;
-import gr.uoa.di.m149_p2.models.queries.DailyRequests;
-import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
-import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
+import gr.uoa.di.m149_p2.models.queries.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +28,7 @@ public class RequestService {
 
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat sdfdo = new SimpleDateFormat("yyyy-MM-dd");
 
     public List<TotalTypeRequests> getTotalTypeRequests(String startDate, String endDate) throws Exception{
         Date start = sdf.parse(startDate);
@@ -43,6 +42,11 @@ public class RequestService {
         return requestDal.getDailyRequests(type, start, end);
     }
 
+    public List<MostCommonTypes> getMostCommonTypes(String date) throws Exception {
+        Date dateD = sdfdo.parse(date);
+        return requestDal.getMostCommonTypes(dateD);
+    }
+
     public List<LeastCommonWards> getLeastCommonWards(String type) {
         return requestDal.getLeastCommonWards(type);
     }
@@ -51,6 +55,12 @@ public class RequestService {
         Date start = sdf.parse(startDate);
         Date end = sdf.parse(endDate);
         return requestDal.getAvgRequestCompletion(start, end);
+    }
+
+    public TotalTypeRequests getMostCommonRequest(String date, CustomPoint p1, CustomPoint p2) throws Exception{
+        Date dateD = sdfdo.parse(date);
+        return requestDal.getMostCommonRequest(dateD, new GeoJsonPoint(p1.getX(), p1.getY()),
+                new GeoJsonPoint(p2.getX(), p2.getY()));
     }
 
     public Request addRequest(NewIncident incident) throws Exception{

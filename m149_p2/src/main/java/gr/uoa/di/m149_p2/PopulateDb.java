@@ -5,16 +5,14 @@ import com.mongodb.client.model.geojson.Position;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.NewIncident;
 import gr.uoa.di.m149_p2.models.*;
-import gr.uoa.di.m149_p2.models.queries.AvgRequestCompletion;
-import gr.uoa.di.m149_p2.models.queries.DailyRequests;
-import gr.uoa.di.m149_p2.models.queries.LeastCommonWards;
-import gr.uoa.di.m149_p2.models.queries.TotalTypeRequests;
+import gr.uoa.di.m149_p2.models.queries.*;
 import gr.uoa.di.m149_p2.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -51,7 +49,7 @@ public class PopulateDb implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        requestRepository.deleteAll();
+        /*requestRepository.deleteAll();
         insertStreetLightOut();//done
         insertSanitation();// done
         insertRodentBaiting();// done
@@ -62,27 +60,7 @@ public class PopulateDb implements CommandLineRunner {
         insertTreeTrims();// done
         insertTreeDebris();// done
         insertAbandonedVehicles(); //done
-        insertGarbageCarts(); //done
-        /*List<DailyRequests> results = requestService.getDailyRequests("Tree Trim","2011-01-12 00:00:00", "2012-01-12 00:00:00");
-        for (DailyRequests result : results) {
-            System.out.println("Creation Date:" + sdf.format(result.getCreationDate()) + " count: " + result.getCount());
-        }*/
-//        List<LeastCommonWards> results = requestService.getLeastCommonWards("Tree Trim");
-//        for (LeastCommonWards result : results) {
-//            System.out.println("Ward:" + result.getWard() + " count: " + result.getCount());
-//        }
-//
-//        List<Request> requests = requestRepository.findAll();
-//        System.out.println(requests.get(0).getPoint().toString());
-        /*List<AvgRequestCompletion> results = requestService.getAvgRequestCompletion("2011-01-01 00:00:00", "2012-08-01 00:00:00");
-        for (AvgRequestCompletion result : results) {
-            System.out.println("Creation Date:" + result.getTypeOfServiceRequest() + " count: " + result.getAvg());
-        }*/
-        /*List<LeastCommonWards> results = requestService.getLeastCommonWards("Tree Trim");
-        for (LeastCommonWards result : results) {
-            System.out.println("Ward:" + result.getWard() + " count: " + result.getCount());
-        }*/
-
+        insertGarbageCarts(); //done*/
     }
 
     public void insertStreetLightOut() throws Exception {
