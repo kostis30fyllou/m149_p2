@@ -3,6 +3,7 @@ package gr.uoa.di.m149_p2.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -13,9 +14,9 @@ public class User {
     private String name;
     private String telephone;
     private String address;
-    private List<Request> upVoted;
+    private ArrayList<Request> upVoted;
 
-    public User(String name, String telephone, String address, List<Request> upVoted) {
+    public User(String name, String telephone, String address, ArrayList<Request> upVoted) {
         this.name = name;
         this.telephone = telephone;
         this.address = address;
@@ -54,11 +55,11 @@ public class User {
         this.address = address;
     }
 
-    public List<Request> getUpVoted() {
+    public ArrayList<Request> getUpVoted() {
         return upVoted;
     }
 
-    public void setUpVoted(List<Request> upVoted) {
+    public void setUpVoted(ArrayList<Request> upVoted) {
         this.upVoted = upVoted;
     }
 }
