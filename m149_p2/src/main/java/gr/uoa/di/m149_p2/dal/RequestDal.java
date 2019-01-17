@@ -1,5 +1,6 @@
 package gr.uoa.di.m149_p2.dal;
 
+import gr.uoa.di.m149_p2.models.Request;
 import gr.uoa.di.m149_p2.models.queries.*;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
@@ -7,6 +8,12 @@ import java.util.Date;
 import java.util.List;
 
 public interface RequestDal {
+
+    public void resetUpvotes();
+
+    public Request upvoteRequest(long id);
+
+    public Long getUpvotedRequestsCount();
 
     public List<TotalTypeRequests> getTotalTypeRequests(Date startDate, Date endDate);
 

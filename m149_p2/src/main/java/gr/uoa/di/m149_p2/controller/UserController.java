@@ -16,9 +16,4 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping(value = "/getUsers")
-    @CrossOrigin()
-    public ResponseEntity<?> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
-    }
 }

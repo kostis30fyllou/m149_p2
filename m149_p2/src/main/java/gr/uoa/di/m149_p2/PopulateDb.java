@@ -1,28 +1,18 @@
 package gr.uoa.di.m149_p2;
 
-import com.mongodb.client.model.geojson.Point;
-import com.mongodb.client.model.geojson.Position;
-import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.NewIncident;
-import gr.uoa.di.m149_p2.models.*;
-import gr.uoa.di.m149_p2.models.queries.*;
 import gr.uoa.di.m149_p2.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 @SpringBootApplication
@@ -31,9 +21,6 @@ public class PopulateDb implements CommandLineRunner {
 
     private String split = ",";
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    @Autowired
-    private RequestRepository requestRepository;
 
     @Autowired
     private RequestService requestService;

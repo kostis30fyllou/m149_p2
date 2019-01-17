@@ -11,6 +11,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -21,6 +23,31 @@ public class RequestDalImpl implements RequestDal{
 
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Override
+    public void resetUpvotes() {
+        Query resetUpVotes = new Query();
+        resetUpVotes.addCriteria(Criteria.where("upVotes").ne(0));
+        Update update = new Update();
+        update.set("upVotes", 0);
+        mongoTemplate.updateMulti(resetUpVotes, update, Request.class);
+    }
+
+    @Override
+    public Request upvoteRequest(long id) {
+        Query upVote = new Query();
+        upVote.addCriteria(Criteria.where("id").is(id));
+        Update update = new Update();
+        update.inc("upVotes", 1);
+        return mongoTemplate.findAndModify(upVote, update, Request.class);
+    }
+
+    @Override
+    public Long getUpvotedRequestsCount() {
+        Query count = new Query();
+        count.addCriteria(Criteria.where("upVotes").gt(0));
+        return mongoTemplate.count(count, Request.class);
+    }
 
     @Override
     public List<TotalTypeRequests> getTotalTypeRequests(Date startDate, Date endDate) {

@@ -1,6 +1,5 @@
 package gr.uoa.di.m149_p2.service;
 
-import com.mongodb.client.model.geojson.Position;
 import gr.uoa.di.m149_p2.dal.RequestDalImpl;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.CustomPoint;
@@ -11,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class RequestService {
@@ -29,6 +28,22 @@ public class RequestService {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat sdfdo = new SimpleDateFormat("yyyy-MM-dd");
+
+    public void resetUpvotes() {
+        requestDal.resetUpvotes();
+    }
+
+    public Request upvoteRequest(long id) {
+        return requestDal.upvoteRequest(id);
+    }
+
+    public Long getCount() {
+        return requestRepository.count();
+    }
+
+    public Long getUpvotedRequestCount() {
+        return requestDal.getUpvotedRequestsCount();
+    }
 
     public List<TotalTypeRequests> getTotalTypeRequests(String startDate, String endDate) throws Exception{
         Date start = sdf.parse(startDate);
@@ -219,5 +234,9 @@ public class RequestService {
             return requestRepository.save(request);
         }
         else return null;
+    }
+
+    public void deleteAll() {
+        requestRepository.deleteAll();
     }
 }
