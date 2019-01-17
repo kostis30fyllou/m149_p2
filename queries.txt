@@ -12,3 +12,12 @@ db.requests.aggregate([ { $match: { $and: [ {"Type of Service Request": "Sanitat
 
 #5
 db.requests.aggregate([{ $match: {"CreationDate": { $exists: 1, $gte: ISODate("2011-01-01"), $lte: ISODate("2012-08-01")}, "CompletionDate": {$exists: 1 }}}, {$group: { _id: null, avg_days: { $avg: { $divide: [{$subtract: ["$CompletionDate", "$CreationDate"] }, 24*60*60*1000]}}}}, { $project: {_id: 0, avg_days: 1 }}])
+
+#7
+db.request.aggregate([{$match: {"creationDate": ISODate("2011-01-09T22:00:00Z")}}, {$project: {id: 1, typeOfServiceRequest: 1, upVotes: 1}}, {"$sort": {upVotes: -1}}, {$limit: 50}]);
+
+#8
+db.user.aggregate([{$project: { name: 1, upvotes:{$cond: { if: { $isArray: "$upVoted" }, then: { $size: "$upVoted" }, else: "NA"}}}}, {"$sort": {upvotes: -1}}, {"$limit": 50}]);
+
+#11
+db.user.aggregate([{$match: {"name": "Scot Abernathy"}}, {$unwind: "$upVoted"}, {$group: {_id: "$upVoted.ward"}}, {$sort: {_id: 1}}]);
