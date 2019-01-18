@@ -99,7 +99,7 @@ public class RequestController {
     }
 
     @GetMapping(value = "/getMostCommonRequest")
-    public ResponseEntity<?> getAvgRequestCompletion(@RequestBody GeoPass gp) {
+    public ResponseEntity<?> getMostCommonRequest(@RequestBody GeoPass gp) {
         try {
             TotalTypeRequests result = requestService.getMostCommonRequest(gp.getDate(), gp.getP1(), gp.getP2());
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -108,6 +108,17 @@ public class RequestController {
             return new ResponseEntity<>(error, error.getStatus());
         }
 
+    }
+
+    @GetMapping(value = "/getMostVotedRequests")
+    public ResponseEntity<?> getMostVotedRequests(@RequestParam String date) {
+        try {
+            List<MostVotedRequests> results = requestService.getMostVotedRequests(date);
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
     }
 
 }

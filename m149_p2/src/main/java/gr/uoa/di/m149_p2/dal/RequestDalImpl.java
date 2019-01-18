@@ -122,4 +122,15 @@ public class RequestDalImpl implements RequestDal{
         return results.getUniqueMappedResult();
     }
 
+    @Override
+    public List<MostVotedRequests> getMostVotedRequests(Date date) {
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("creationDate").is(date)),
+                Aggregation.project("id", "typeOfServiceRequest", "upVotes"),
+                Aggregation.sort(Sort.Direction.DESC, "upVotes"),
+                Aggregation.limit(50)
+        );
+        AggregationResults<MostVotedRequests> results = mongoTemplate.aggregate(agg, Request.class, MostVotedRequests.class);
+        return results.getMappedResults();
+    }
 }

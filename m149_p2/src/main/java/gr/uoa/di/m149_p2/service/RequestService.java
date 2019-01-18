@@ -78,6 +78,11 @@ public class RequestService {
                 new GeoJsonPoint(p2.getX(), p2.getY()));
     }
 
+    public List<MostVotedRequests> getMostVotedRequests(String date) throws Exception {
+        Date day = sdf.parse(date);
+        return requestDal.getMostVotedRequests(day);
+    }
+
     public Request addRequest(NewIncident incident) throws Exception{
         if(incident == null) {
             return  null;

@@ -26,4 +26,6 @@ public interface RequestDal {
     public List<AvgRequestCompletion> getAvgRequestCompletion(Date startDate, Date endDate);
 
     public TotalTypeRequests getMostCommonRequest(Date date, GeoJsonPoint p1, GeoJsonPoint p2);
+
+    public List<MostVotedRequests> getMostVotedRequests(Date date);
 }

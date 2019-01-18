@@ -1,23 +1,23 @@
 package gr.uoa.di.m149_p2.service;
 
+import gr.uoa.di.m149_p2.dal.UserDal;
 import gr.uoa.di.m149_p2.dal.UsersRepository;
 import gr.uoa.di.m149_p2.models.User;
+import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 @Service
 public class UserService {
 
     @Autowired
-    MongoTemplate mongoTemplate;
+    UsersRepository usersRepository;
 
     @Autowired
-    UsersRepository usersRepository;
+    UserDal userDal;
 
     public void deleteAll() {
         usersRepository.deleteAll();
@@ -28,4 +28,9 @@ public class UserService {
         user.setId(id);
         return usersRepository.save(user);
     }
+
+    public List<MostActiveUsers> getMostActiveUsers() throws Exception {
+        return userDal.getMostActiveUsers();
+    }
+
 }
