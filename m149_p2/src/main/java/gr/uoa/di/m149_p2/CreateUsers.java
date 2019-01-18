@@ -42,8 +42,7 @@ public class CreateUsers implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Create();
-        System.out.println(requestService.getUpvotedRequestCount());
+        //Create();
         System.out.println("done");
     }
 

@@ -36,7 +36,7 @@ public class PopulateDb implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        /*requestRepository.deleteAll();
+        /*requestService.deleteAll();
         insertStreetLightOut();//done
         insertSanitation();// done
         insertRodentBaiting();// done
