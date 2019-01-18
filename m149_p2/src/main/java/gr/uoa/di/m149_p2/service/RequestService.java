@@ -1,6 +1,6 @@
 package gr.uoa.di.m149_p2.service;
 
-import gr.uoa.di.m149_p2.dal.RequestDalImpl;
+import gr.uoa.di.m149_p2.dal.RequestDal;
 import gr.uoa.di.m149_p2.dal.RequestRepository;
 import gr.uoa.di.m149_p2.dto.CustomPoint;
 import gr.uoa.di.m149_p2.dto.NewIncident;
@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class RequestService {
@@ -23,7 +22,7 @@ public class RequestService {
     RequestRepository requestRepository;
 
     @Autowired
-    RequestDalImpl requestDal;
+    RequestDal requestDal;
 
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -79,7 +78,7 @@ public class RequestService {
     }
 
     public List<MostVotedRequests> getMostVotedRequests(String date) throws Exception {
-        Date day = sdf.parse(date);
+        Date day = sdfdo.parse(date);
         return requestDal.getMostVotedRequests(day);
     }
 
