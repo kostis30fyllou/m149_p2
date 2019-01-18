@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UserDal {
     public List<MostActiveUsers> getMostActiveUsers();
+
+    public List<Integer> getVotedWards(String name);
 }

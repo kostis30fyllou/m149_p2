@@ -6,10 +6,7 @@ import gr.uoa.di.m149_p2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +18,20 @@ public class UserController {
     UserService userService;
 
     @GetMapping(value = "/getMostActiveUsers")
-    public ResponseEntity<?> getMostActiveUsers(){
+    public ResponseEntity<?> getMostActiveUsers() {
         try {
             List<MostActiveUsers> results = userService.getMostActiveUsers();
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+    }
+
+    @GetMapping(value = "/getVotedWards")
+    public ResponseEntity<?> getVotedWards(@RequestParam String name) {
+        try{
+            List<Integer> results = userService.getVotedWards(name);
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);

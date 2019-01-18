@@ -33,4 +33,8 @@ public class UserService {
         return userDal.getMostActiveUsers();
     }
 
+    public List<Integer> getVotedWards(String name) throws Exception {
+        return userDal.getVotedWards(name);
+    }
+
 }
