@@ -19,5 +19,8 @@ db.request.aggregate([{$match: {"creationDate": ISODate("2011-01-09T22:00:00Z")}
 #8
 db.user.aggregate([{$project: { name: 1, upvotes:{$cond: { if: { $isArray: "$upVoted" }, then: { $size: "$upVoted" }, else: "NA"}}}}, {"$sort": {upvotes: -1}}, {"$limit": 50}]);
 
+#9
+db.user.aggregate([{$unwind: "$upVoted"}, {$group: {_id: "$_id", name: {"$first": "$name"}, ward: {"$addToSet": "$upVoted.ward"}}}, {$project: {name: 1, wards: {$size: "$ward"}}}, {"$sort": {wards: -1}}, {$limit: 50} ]);
+
 #11
 db.user.aggregate([{$match: {"name": "Scot Abernathy"}}, {$unwind: "$upVoted"}, {$group: {_id: "$upVoted.ward"}}, {$sort: {_id: 1}}]);
