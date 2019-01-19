@@ -1,6 +1,5 @@
 package gr.uoa.di.m149_p2.dto;
 
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 public class GeoPass {
 

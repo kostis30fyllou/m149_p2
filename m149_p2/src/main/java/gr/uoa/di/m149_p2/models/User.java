@@ -62,4 +62,8 @@ public class User {
     public void setUpVoted(ArrayList<Request> upVoted) {
         this.upVoted = upVoted;
     }
+
+    public void upVoteRequest(Request request) {
+        upVoted.add(request);
+    }
 }

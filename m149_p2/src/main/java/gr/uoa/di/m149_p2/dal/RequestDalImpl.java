@@ -51,19 +51,23 @@ public class RequestDalImpl implements RequestDal{
 
     @Override
     public List<TotalTypeRequests> getTotalTypeRequests(Date startDate, Date endDate) {
-        Aggregation agg = Aggregation.newAggregation(Aggregation.match(Criteria.where("creationDate")
-                        .gte(startDate).lte(endDate)), Aggregation.group("typeOfServiceRequest").
-                count().as("count"), Aggregation.project("count").and("typeOfServiceRequest").previousOperation(),
-                Aggregation.sort(Sort.Direction.DESC, "count"));
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("creationDate").gte(startDate).lte(endDate)),
+                Aggregation.group("typeOfServiceRequest").count().as("count"),
+                Aggregation.project("count").and("typeOfServiceRequest").previousOperation(),
+                Aggregation.sort(Sort.Direction.DESC, "count")
+        );
         AggregationResults<TotalTypeRequests> results = mongoTemplate.aggregate(agg, Request.class, TotalTypeRequests.class);
         return results.getMappedResults();
     }
 
     @Override
     public List<DailyRequests> getDailyRequests(String type, Date startDate, Date endDate) {
-        Aggregation agg = Aggregation.newAggregation(Aggregation.match(Criteria.where("creationDate")
-                        .gte(startDate).lte(endDate).and("typeOfServiceRequest").is(type)), Aggregation.group("creationDate").
-                        count().as("count"), Aggregation.project("count").and("creationDate").previousOperation());
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("creationDate").gte(startDate).lte(endDate).and("typeOfServiceRequest").is(type)),
+                Aggregation.group("creationDate").count().as("count"),
+                Aggregation.project("count").and("creationDate").previousOperation()
+        );
         AggregationResults<DailyRequests> results = mongoTemplate.aggregate(agg, Request.class, DailyRequests.class);
         return results.getMappedResults();
     }
