@@ -2,6 +2,7 @@ package gr.uoa.di.m149_p2.controller;
 
 import gr.uoa.di.m149_p2.error.CustomError;
 import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
+import gr.uoa.di.m149_p2.models.queries.VotedWards;
 import gr.uoa.di.m149_p2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class UserController {
     @GetMapping(value = "/getVotedWards")
     public ResponseEntity<?> getVotedWards(@RequestParam String name) {
         try{
-            List<Integer> results = userService.getVotedWards(name);
+            List<VotedWards> results = userService.getVotedWards(name);
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);

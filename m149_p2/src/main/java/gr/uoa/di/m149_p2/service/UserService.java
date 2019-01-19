@@ -4,6 +4,7 @@ import gr.uoa.di.m149_p2.dal.UserDal;
 import gr.uoa.di.m149_p2.dal.UsersRepository;
 import gr.uoa.di.m149_p2.models.User;
 import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
+import gr.uoa.di.m149_p2.models.queries.VotedWards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class UserService {
         return userDal.getMostActiveUsers();
     }
 
-    public List<Integer> getVotedWards(String name) throws Exception {
+    public List<VotedWards> getVotedWards(String name) throws Exception {
         return userDal.getVotedWards(name);
     }
 

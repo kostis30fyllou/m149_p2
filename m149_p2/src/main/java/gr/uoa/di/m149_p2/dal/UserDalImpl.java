@@ -2,6 +2,7 @@ package gr.uoa.di.m149_p2.dal;
 
 import gr.uoa.di.m149_p2.models.User;
 import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
+import gr.uoa.di.m149_p2.models.queries.VotedWards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -30,14 +31,14 @@ public class UserDalImpl implements UserDal{
     }
 
     @Override
-    public List<Integer> getVotedWards(String name) {
+    public List<VotedWards> getVotedWards(String name) {
         Aggregation agg = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("name").is(name)),
                 Aggregation.unwind("upVoted"),
-                Aggregation.group("upVoted.ward")//,
-//                Aggregation.sort()
+                Aggregation.group("upVoted.ward"),
+                Aggregation.sort(Sort.Direction.ASC, "_id")
         );
-        AggregationResults<Integer> results = mongoTemplate.aggregate(agg, User.class, Integer.TYPE);
+        AggregationResults<VotedWards> results = mongoTemplate.aggregate(agg, User.class, VotedWards.class);
         return results.getMappedResults();
     }
 
