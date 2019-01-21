@@ -72,6 +72,23 @@ public class UserController {
     }
 
     /**
+     * 10th query: Returns all incident ids for which the same telephone number has been used for more than one
+     * names.
+     *
+     *  @return
+     */
+    @GetMapping(value = "/getIdsWithCommonPhone")
+    public ResponseEntity<?> getIdsWithCommonPhone(){
+        try{
+            List<Long> results = userService.getUpVotedFromMultiTelephones();
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+    }
+
+    /**
      * 11th query: Returns all the wards in which a given name has casted a vote for an incident taking place in it.
      *
      * @param name
