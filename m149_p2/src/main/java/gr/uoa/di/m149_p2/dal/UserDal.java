@@ -2,6 +2,7 @@ package gr.uoa.di.m149_p2.dal;
 
 import gr.uoa.di.m149_p2.models.User;
 import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
+import gr.uoa.di.m149_p2.models.queries.MultiTelephones;
 import gr.uoa.di.m149_p2.models.queries.TopUsersByWards;
 import gr.uoa.di.m149_p2.models.queries.VotedWards;
 
@@ -17,4 +18,8 @@ public interface UserDal {
     public boolean requestUpVoted(String name, String telephone, long id);
 
     public User getUser(String name, String telephone);
+
+    public List<MultiTelephones> getMultiTelephones();
+
+    public List<Long> getTotalUpVotes(String name, String telephone);
 }

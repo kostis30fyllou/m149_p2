@@ -6,13 +6,13 @@ import gr.uoa.di.m149_p2.dal.UsersRepository;
 import gr.uoa.di.m149_p2.models.Request;
 import gr.uoa.di.m149_p2.models.User;
 import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
+import gr.uoa.di.m149_p2.models.queries.MultiTelephones;
 import gr.uoa.di.m149_p2.models.queries.TopUsersByWards;
 import gr.uoa.di.m149_p2.models.queries.VotedWards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -71,5 +71,29 @@ public class UserService {
         return userDal.getVotedWards(name);
     }
 
+    public static <T> Set<T> getCommonElements(Collection<? extends Collection<T>> collections) {
 
+        Set<T> common = new LinkedHashSet<>();
+        if (!collections.isEmpty()) {
+            Iterator<? extends Collection<T>> iterator = collections.iterator();
+            common.addAll(iterator.next());
+            while (iterator.hasNext()) {
+                common.retainAll(iterator.next());
+            }
+        }
+        return common;
+    }
+
+    public List<Long> getUpVotedFromMultiTelephones() {
+        List<MultiTelephones> multiTelephones = userDal.getMultiTelephones();
+        List<Long> results = new ArrayList<>();
+        for(MultiTelephones multiTelephone : multiTelephones) {
+            List<List<Long>> all = new ArrayList<>();
+            for(String name : multiTelephone.getNames()) {
+                all.add(userDal.getTotalUpVotes(name, multiTelephone.getTelephone()));
+            }
+            results.addAll(getCommonElements(all));
+        }
+        return results;
+    }
 }

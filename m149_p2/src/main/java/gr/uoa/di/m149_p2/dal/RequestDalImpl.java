@@ -2,6 +2,7 @@ package gr.uoa.di.m149_p2.dal;
 
 import com.mongodb.BasicDBObject;
 import gr.uoa.di.m149_p2.models.Request;
+import gr.uoa.di.m149_p2.models.User;
 import gr.uoa.di.m149_p2.models.queries.*;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,4 +138,6 @@ public class RequestDalImpl implements RequestDal{
         AggregationResults<MostVotedRequests> results = mongoTemplate.aggregate(agg, Request.class, MostVotedRequests.class);
         return results.getMappedResults();
     }
+
+
 }

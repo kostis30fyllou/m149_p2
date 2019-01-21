@@ -1,9 +1,10 @@
 package gr.uoa.di.m149_p2.dal;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import gr.uoa.di.m149_p2.models.User;
-import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
-import gr.uoa.di.m149_p2.models.queries.TopUsersByWards;
-import gr.uoa.di.m149_p2.models.queries.VotedWards;
+import gr.uoa.di.m149_p2.models.queries.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -79,5 +80,27 @@ public class UserDalImpl implements UserDal{
     }
 
 
+    @Override
+    public List<MultiTelephones> getMultiTelephones() {
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.group("telephone").addToSet("name").as("names").count().as("count"),
+                Aggregation.match(Criteria.where("count").gt(1)),
+                Aggregation.project("names", "count").and("telephone").previousOperation()
+        );
+        AggregationResults<MultiTelephones> results = mongoTemplate.aggregate(agg, User.class, MultiTelephones.class);
+        return results.getMappedResults();
+    }
+
+    @Override
+    public List<Long> getTotalUpVotes(String name, String telephone) {
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("name").is(name).and("telephone").is(telephone)),
+                Aggregation.unwind("upVoted"),
+                Aggregation.group().addToSet("upVoted.id").as("upvotes"),
+                Aggregation.project("upvotes")
+        );
+        AggregationResults<TotalUpVotes> results = mongoTemplate.aggregate(agg, User.class, TotalUpVotes.class);
+        return results.getUniqueMappedResult().getUpvotes();
+    }
 
 }
