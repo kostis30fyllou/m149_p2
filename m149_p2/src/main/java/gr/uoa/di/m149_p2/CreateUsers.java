@@ -2,8 +2,10 @@ package gr.uoa.di.m149_p2;
 
 import com.github.javafaker.Faker;
 
+import gr.uoa.di.m149_p2.dal.UserDal;
 import gr.uoa.di.m149_p2.models.Request;
 import gr.uoa.di.m149_p2.models.User;
+import gr.uoa.di.m149_p2.models.queries.TopUsersByWards;
 import gr.uoa.di.m149_p2.service.RequestService;
 import gr.uoa.di.m149_p2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -32,7 +35,6 @@ public class CreateUsers implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 //        Create();
-        System.out.println("done");
     }
 
     public void Create() {

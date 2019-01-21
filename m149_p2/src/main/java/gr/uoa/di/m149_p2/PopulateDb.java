@@ -19,9 +19,6 @@ import java.text.SimpleDateFormat;
 public class PopulateDb implements CommandLineRunner {
 
 
-    private String split = ",";
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     @Autowired
     private RequestService requestService;
 
@@ -35,8 +32,11 @@ public class PopulateDb implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        //populateDB();
+    }
 
-        /*requestService.deleteAll();
+    public void populateDB() throws Exception{
+        requestService.deleteAll();
         insertStreetLightOut();//done
         insertSanitation();// done
         insertRodentBaiting();// done
@@ -47,7 +47,7 @@ public class PopulateDb implements CommandLineRunner {
         insertTreeTrims();// done
         insertTreeDebris();// done
         insertAbandonedVehicles(); //done
-        insertGarbageCarts(); //done*/
+        insertGarbageCarts(); //done
     }
 
     public void insertStreetLightOut() throws Exception {

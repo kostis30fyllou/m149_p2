@@ -2,12 +2,15 @@ package gr.uoa.di.m149_p2.dal;
 
 import gr.uoa.di.m149_p2.models.User;
 import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
+import gr.uoa.di.m149_p2.models.queries.TopUsersByWards;
+import gr.uoa.di.m149_p2.models.queries.VotedWards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,15 +33,51 @@ public class UserDalImpl implements UserDal{
     }
 
     @Override
-    public List<Integer> getVotedWards(String name) {
+    public List<TopUsersByWards> getTopUsersByWards() {
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.unwind("upVoted"),
+                Aggregation.group("id").first("name").as("name").addToSet("upVoted.ward").as("ward"),
+                Aggregation.project("id", "name").and("ward").size().as("wards"),
+                Aggregation.sort(Sort.Direction.DESC, "wards"),
+                Aggregation.limit(50)
+        );
+        AggregationResults<TopUsersByWards> results = mongoTemplate.aggregate(agg, User.class, TopUsersByWards.class);
+        return results.getMappedResults();
+    }
+
+    @Override
+    public List<VotedWards> getVotedWards(String name) {
         Aggregation agg = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("name").is(name)),
                 Aggregation.unwind("upVoted"),
-                Aggregation.group("upVoted.ward")//,
-//                Aggregation.sort()
+                Aggregation.group("upVoted.ward"),
+                Aggregation.sort(Sort.Direction.ASC, "_id")
         );
-        AggregationResults<Integer> results = mongoTemplate.aggregate(agg, User.class, Integer.TYPE);
+        AggregationResults<VotedWards> results = mongoTemplate.aggregate(agg, User.class, VotedWards.class);
         return results.getMappedResults();
     }
+
+    @Override
+    public boolean requestUpVoted(String name, String telephone, long id) {
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("name").is(name).and("telephone").is(telephone)),
+                Aggregation.unwind("upVoted"),
+                Aggregation.match(Criteria.where("upVoted.id").is(id))
+        );
+        AggregationResults<User> results = mongoTemplate.aggregate(agg, User.class, User.class);
+        if(results.getUniqueMappedResult() == null) {
+            return false;
+        }
+        else return true;
+    }
+
+    @Override
+    public User getUser(String name, String telephone) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("name").is(name).and("telephone").is(telephone));
+        return mongoTemplate.findOne(query, User.class);
+    }
+
+
 
 }

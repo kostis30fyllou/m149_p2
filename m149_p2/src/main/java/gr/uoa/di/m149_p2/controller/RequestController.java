@@ -20,6 +20,13 @@ public class RequestController {
     @Autowired
     RequestService requestService;
 
+
+    /**
+     * Add a new incident request to request collection.
+     *
+     * @param newIncident
+     * @return
+     */
     @PostMapping(value = "/newIncident")
     public ResponseEntity<?> newIncident(@RequestBody NewIncident newIncident) {
         try {
@@ -38,6 +45,14 @@ public class RequestController {
 
     }
 
+    /**
+     * 1st query: Returns the total requests per type that were created within a specified time range and sort
+     * them in a descending order.
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @GetMapping(value = "/getTotalTypeRequests")
     public ResponseEntity<?> getTotalTypeRequests(@RequestParam String startDate, @RequestParam String endDate) {
         try {
@@ -50,6 +65,15 @@ public class RequestController {
 
     }
 
+
+    /**
+     * 2nd query: Returns the number of total requests per day for a specified request type and time range.
+     *
+     * @param type
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @GetMapping(value = "/getDailyRequests")
     public ResponseEntity<?> getDailyRequests(@RequestParam String type, @RequestParam String startDate, @RequestParam String endDate) {
         try {
@@ -62,6 +86,12 @@ public class RequestController {
 
     }
 
+    /**
+     * 3rd query: Returns the three most common service requests per zip code for a specified day.
+     *
+     * @param date
+     * @return
+     */
     @GetMapping(value = "/getMostCommonTypes")
     public ResponseEntity<?> getMostCommonTypes(@RequestParam String date) {
         try {
@@ -74,6 +104,12 @@ public class RequestController {
 
     }
 
+    /**
+     * 4th query: Returns the three least common wards with regards to a given service request type.
+     *
+     * @param type
+     * @return
+     */
     @GetMapping(value = "/getLeastCommonWards")
     public ResponseEntity<?> getLeastCommonWards(@RequestParam String type) {
         try {
@@ -86,6 +122,13 @@ public class RequestController {
 
     }
 
+    /**
+     * 5th query: Returns the average completion time per service request for a specified date range.
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @GetMapping(value = "/getAvgRequestCompletion")
     public ResponseEntity<?> getAvgRequestCompletion(@RequestParam String startDate, @RequestParam String endDate) {
         try {
@@ -98,6 +141,13 @@ public class RequestController {
 
     }
 
+
+    /**
+     * 6th query: Returns the most common service request in a specified bounding box for a specified day.
+     *
+     * @param gp
+     * @return
+     */
     @GetMapping(value = "/getMostCommonRequest")
     public ResponseEntity<?> getMostCommonRequest(@RequestBody GeoPass gp) {
         try {
@@ -110,6 +160,13 @@ public class RequestController {
 
     }
 
+
+    /**
+     * 7th query: Returns the fifty most up voted service requests for a specified day.
+     *
+     * @param date
+     * @return
+     */
     @GetMapping(value = "/getMostVotedRequests")
     public ResponseEntity<?> getMostVotedRequests(@RequestParam String date) {
         try {
