@@ -100,7 +100,7 @@ public class UserDalImpl implements UserDal{
                 Aggregation.project("name", "telephone").and("$upVoted.id").as("incidents"),
                 Aggregation.unwind("incidents"),
                 Aggregation.group("$telephone", "$incidents").addToSet("name").as("names"),
-                Aggregation.project("$telephone", "names").and("names").size().as("count"),
+                Aggregation.project("$telephone", "$incidents", "names").and("$incidents").as("incident_id").and("names").size().as("count"),
                 Aggregation.match(Criteria.where("count").gt(1)),
                 Aggregation.sort(Sort.Direction.ASC, "count")
         ).withOptions(newAggregationOptions().allowDiskUse(true).build());

@@ -5,6 +5,7 @@ import java.util.List;
 public class MultiTelephones {
 
     private String telephone;
+    private Long incident_id;
     private List<String> names;
     private Long count;
 
@@ -14,6 +15,14 @@ public class MultiTelephones {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public Long getIncident_id() {
+        return incident_id;
+    }
+
+    public void setIncident_id(Long incident_id) {
+        this.incident_id = incident_id;
     }
 
     public List<String> getNames() {
