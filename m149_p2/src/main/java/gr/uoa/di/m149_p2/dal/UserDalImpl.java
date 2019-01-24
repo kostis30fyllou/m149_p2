@@ -9,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregationOptions;
 
 @Repository
 public class UserDalImpl implements UserDal{
@@ -87,6 +90,20 @@ public class UserDalImpl implements UserDal{
                 Aggregation.match(Criteria.where("count").gt(1)),
                 Aggregation.project("names", "count").and("telephone").previousOperation()
         );
+        AggregationResults<MultiTelephones> results = mongoTemplate.aggregate(agg, User.class, MultiTelephones.class);
+        return results.getMappedResults();
+    }
+
+    @Override
+    public List<MultiTelephones> getMultiTelephonesSingle() {
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.project("name", "telephone").and("$upVoted.id").as("incidents"),
+                Aggregation.unwind("incidents"),
+                Aggregation.group("$telephone", "$incidents").addToSet("name").as("names"),
+                Aggregation.project("$telephone", "names").and("names").size().as("count"),
+                Aggregation.match(Criteria.where("count").gt(1)),
+                Aggregation.sort(Sort.Direction.ASC, "count")
+        ).withOptions(newAggregationOptions().allowDiskUse(true).build());
         AggregationResults<MultiTelephones> results = mongoTemplate.aggregate(agg, User.class, MultiTelephones.class);
         return results.getMappedResults();
     }

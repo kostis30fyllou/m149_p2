@@ -21,5 +21,7 @@ public interface UserDal {
 
     public List<MultiTelephones> getMultiTelephones();
 
+    public List<MultiTelephones> getMultiTelephonesSingle();
+
     public List<Long> getTotalUpVotes(String name, String telephone);
 }

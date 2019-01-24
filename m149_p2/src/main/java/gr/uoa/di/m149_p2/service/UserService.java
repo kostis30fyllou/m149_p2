@@ -96,4 +96,8 @@ public class UserService {
         }
         return results;
     }
+
+    public List<MultiTelephones> getUpVotedFromMultiTelephonesSingle() {
+        return userDal.getMultiTelephonesSingle();
+    }
 }

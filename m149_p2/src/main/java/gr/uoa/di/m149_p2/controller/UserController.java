@@ -2,6 +2,7 @@ package gr.uoa.di.m149_p2.controller;
 
 import gr.uoa.di.m149_p2.error.CustomError;
 import gr.uoa.di.m149_p2.models.queries.MostActiveUsers;
+import gr.uoa.di.m149_p2.models.queries.MultiTelephones;
 import gr.uoa.di.m149_p2.models.queries.TopUsersByWards;
 import gr.uoa.di.m149_p2.models.queries.VotedWards;
 import gr.uoa.di.m149_p2.service.UserService;
@@ -81,6 +82,24 @@ public class UserController {
     public ResponseEntity<?> getIdsWithCommonPhone(){
         try{
             List<Long> results = userService.getUpVotedFromMultiTelephones();
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (Exception e) {
+            CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+    }
+
+    /**
+     * 10th query: Returns all incident ids for which the same telephone number has been used for more than one
+     * names.
+     *
+     *  @return
+     */
+
+    @GetMapping(value = "/getIdsWithCommonPhoneSingle")
+    public ResponseEntity<?> getIdsWithCommonPhoneSingle() {
+        try {
+            List<MultiTelephones> results = userService.getUpVotedFromMultiTelephonesSingle();
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (Exception e) {
             CustomError error = new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST);

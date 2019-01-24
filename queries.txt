@@ -22,5 +22,8 @@ db.user.aggregate([{$project: { name: 1, upvotes:{$cond: { if: { $isArray: "$upV
 #9
 db.user.aggregate([{$unwind: "$upVoted"}, {$group: {_id: "$_id", name: {"$first": "$name"}, ward: {"$addToSet": "$upVoted.ward"}}}, {$project: {name: 1, wards: {$size: "$ward"}}}, {"$sort": {wards: -1}}, {$limit: 50} ]);
 
+#10
+db.user.aggregate([ { $project : { "name" : 1, "telephone" : 1, incidents : "$upVoted._id" } }, { $unwind : "$incidents" }, { $group : { _id : { phoneNumber: "$telephone", incidentID: "$incidents" }, names : { $addToSet: "$name" } } }, { $project : { phoneNumber:1, names : "$names", count : { $size: "$names" } } }, { $match : { "count" : { $gt: 1 } } }, { $sort : { "count" : -1 } } ],{allowDiskUse: true}).pretty();
+
 #11
 db.user.aggregate([{$match: {"name": "Scot Abernathy"}}, {$unwind: "$upVoted"}, {$group: {_id: "$upVoted.ward"}}, {$sort: {_id: 1}}]);
