@@ -2,6 +2,7 @@ package gr.uoa.di.m149_p2.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -13,15 +14,20 @@ public class Request {
 
     @Id
     private Long id;
+    @Indexed
     private Date creationDate;
     private String status;
+    @Indexed
     private Date completionDate;
     private String serviceRequestNumber;
+    @Indexed
     private String typeOfServiceRequest;
     private String streetAddress;
+    @Indexed
     private Integer zipCode;
     private BigDecimal x;
     private BigDecimal y;
+//    @Indexed
     private Integer ward;
     private Integer policeDistrict;
     private Integer communityArea;

@@ -1,6 +1,7 @@
 package gr.uoa.di.m149_p2.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -11,7 +12,9 @@ public class User {
 
     @Id
     private Long id;
+    @Indexed
     private String name;
+    @Indexed
     private String telephone;
     private String address;
     private ArrayList<Request> upVoted;
