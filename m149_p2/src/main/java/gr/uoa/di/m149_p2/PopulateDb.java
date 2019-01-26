@@ -32,7 +32,7 @@ public class PopulateDb implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        populateDB();
+        populateDB();
     }
 
     public void populateDB() throws Exception{

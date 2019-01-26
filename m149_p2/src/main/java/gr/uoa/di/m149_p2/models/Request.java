@@ -27,7 +27,7 @@ public class Request {
     private Integer zipCode;
     private BigDecimal x;
     private BigDecimal y;
-//    @Indexed
+    @Indexed
     private Integer ward;
     private Integer policeDistrict;
     private Integer communityArea;

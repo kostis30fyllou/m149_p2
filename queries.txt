@@ -4,14 +4,17 @@ db.requests.aggregate([{ "$match": {$and: [ {"CreationDate": {"$gte": ISODate("2
 #2
 db.requests.aggregate([ { $match: { $and: [ {"Type of Service Request": "Tree Trim"}, {"CreationDate": {"$gte" : ISODate("2011-01-12T00:00:00")}}, {"CreationDate": {"$lte" : ISODate("2012-01-12T00:00:00")}}]}} ,{$group : {_id : "$CreationDate", total : {$sum : 1}}}]);
 
-#2.1(with order, not required)
-db.requests.aggregate([ { $match: { $and: [ {"Type of Service Request": "Tree Trim"}, {"CreationDate": {"$gte" : ISODate("2011-01-12T00:00:00")}}, {"CreationDate": {"$lte" : ISODate("2012-01-12T00:00:00")}}]}} ,{$group : {_id : "$CreationDate", total : {$sum : 1}}}, {$sort: {"CreationDate": -1}}]);
+#3
+db.request.aggregate([{$match: {$and:[{"creationDate": ISODate("2011-01-11T22:00:00")}, {"zipCode": {$exists: 1} }]}},{$group: {_id: {zipCode: "$zipCode","type": "$typeOfServiceRequest" },total: {$sum:1}}}, {$sort: {total: -1}},{$group: {_id: "$_id.zipCode",types: { $push: {"type": "$_id.type" ,total: "$total"}}}}, {$project:{_id: 1, most: {$slice: ["$types", 3]}}}]);
 
 #4
-db.requests.aggregate([ { $match: { $and: [ {"Type of Service Request": "Sanitation Code Violation"} ]}} ,{$group : {_id : "$Ward", total : {$sum : 1}}}, {$sort: {total : 1}}, {$limit:3}]);
+db.request.aggregate([{ "$match": {$and: [ {"creationDate": ISODate("2011-01-11T22:00:00")}, {"point": {$geoWithin: { $box:  [ [ 0, 0 ], [ 100, 100 ] ]}}] }},{$group : {_id : "$typeOfServiceRequest", total : {$sum : 1}}}, {$sort: {"total": -1}}, {$limit: 1}])
 
 #5
-db.requests.aggregate([{ $match: {"CreationDate": { $exists: 1, $gte: ISODate("2011-01-01"), $lte: ISODate("2012-08-01")}, "CompletionDate": {$exists: 1 }}}, {$group: { _id: null, avg_days: { $avg: { $divide: [{$subtract: ["$CompletionDate", "$CreationDate"] }, 24*60*60*1000]}}}}, { $project: {_id: 0, avg_days: 1 }}])
+db.request.aggregate([{ $match: {"creationDate": { $exists: 1, $gte: ISODate("2011-01-01"), $lte: ISODate("2012-08-01")}, "completionDate": {$exists: 1 ,$gte: ISODate("2011-01-01"), $lte: ISODate("2012-08-01")}}}, {$group: { _id: null, avg_days: { $avg: { $divide: [{$subtract: ["$completionDate", "$creationDate"] }, 24*60*60*1000]}}}}, { $project: {_id: 1, avg_days: 1 }}])
+
+#6
+db.request.aggregate([{ "$match": {$and: [ {"creationDate": ISODate("2011-01-11T22:00:00")}, {"point}: {$geoWithin: { $box:  [ [ -100, -100 ], [ 100, 100 ] ]}] }},{$group : {_id : "$typeOfServiceRequest", total : {$sum : 1}}}, {$sort: {"total": -1}}, {$limit: 1}])
 
 #7
 db.request.aggregate([{$match: {"creationDate": ISODate("2011-01-09T22:00:00Z")}}, {$project: {id: 1, typeOfServiceRequest: 1, upVotes: 1}}, {"$sort": {upVotes: -1}}, {$limit: 50}]);
